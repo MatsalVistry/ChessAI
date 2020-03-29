@@ -184,16 +184,16 @@ public class ChessPanel extends JPanel implements MouseListener, KeyListener
     }
     public boolean isValidMove(int oldr, int oldc, int r, int c, Piece p)
     {
-    	boolean [][] arr = selected.getAvailableMoves(cg.getBoard());
+    	boolean [][] arr = p.getAvailableMoves(cg.getBoard());
 
 		Piece pp = cg.movePiece(oldr,oldc,r,c,p);
     	
-    	if(arr[r][c]==true && inCheck(selected.getColor())==false)
+    	if(arr[r][c]==true && inCheck(p.getColor())==false)
     	{
-    		cg.revertMovePiece(oldr,oldc, selected, pp);
+    		cg.revertMovePiece(oldr,oldc, p, pp);
 			return true;
 		}
-		cg.revertMovePiece(oldr,oldc, selected, pp);
+		cg.revertMovePiece(oldr,oldc, p, pp);
 		return false;
     }
     public boolean inCheck(int color)
@@ -219,10 +219,36 @@ public class ChessPanel extends JPanel implements MouseListener, KeyListener
     			}
     		}
     	}
-    	
-    	
     	return false;
     }
+    public boolean inCheckmate(int color)
+	{
+		if(inCheck(color)==false)
+			return false;
+		else
+		{
+			for(int s=0;s<cg.getPieces().size();s++)
+			{
+				if(cg.getPieces().get(s).getColor()==color)
+				{
+					boolean [][] arr = cg.getPieces().get(s).getAvailableMoves(cg.getBoard());
+
+					for(int x=0;x<arr.length;x++)
+					{
+						for(int y=0;y<arr[0].length;y++)
+						{
+							if(arr[x][y]==true)
+							{
+								if(isValidMove(cg.getPieces().get(s).getRow(), cg.getPieces().get(s).getCol(), x,y,cg.getPieces().get(s))==true)
+									return false;
+							}
+						}
+					}
+				}
+			}
+		}
+		return true;
+	}
  
     public void mouseClicked(MouseEvent e)
     {
@@ -261,7 +287,11 @@ public class ChessPanel extends JPanel implements MouseListener, KeyListener
     	                cg.setTurn(cg.BLACK);
     	                System.out.println("Successful Move White Player");
     	                cg.printBoard();
-    	            }				
+						boolean inCheckmate = inCheckmate(cg.BLACK);
+						if(inCheckmate==true)
+							System.out.println("CHECKMATEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE");
+
+					}
     			}
     		}
     	}
@@ -288,6 +318,9 @@ public class ChessPanel extends JPanel implements MouseListener, KeyListener
     	                cg.setTurn(cg.WHITE);
     	                System.out.println("Successful Move Black Player");
     	                cg.printBoard();
+    	                boolean inCheckmate = inCheckmate(cg.WHITE);
+    	                if(inCheckmate==true)
+    	                	System.out.println("CHECKMATEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE");
     	            }				
     			}
     		}

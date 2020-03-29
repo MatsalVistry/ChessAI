@@ -34,7 +34,7 @@ public class Pawn extends Piece
 		{
 			if(r+1<8 && board[r+1][c]==null)
 				arr[r+1][c]=true;
-			if(r==1 && board[r+2][c]==null)
+			if(r==1 && board[r+1][c]==null &&  board[r+2][c]==null)
 				arr[r+2][c]=true;
 			if(r+1<8 && c+1<8 && board[r+1][c+1]!=null && board[r+1][c+1].getColor()!=0)
 				arr[r+1][c+1]=true;
@@ -46,7 +46,7 @@ public class Pawn extends Piece
 		{
 			if(r-1>0 && board[r-1][c]==null)
 				arr[r-1][c]=true;
-			if(r==6 && board[r-2][c]==null)
+			if(r==6 && board[r-1][c]==null && board[r-2][c]==null)
 				arr[r-2][c]=true;
 			if(r-1>=0 && c+1<8 && board[r-1][c+1]!=null && board[r-1][c+1].getColor()!=1)
 				arr[r-1][c+1]=true;

@@ -6,16 +6,18 @@ public class King extends Piece
 	private boolean alive;
 	private int color;
 	private int type ;
+	private boolean hasMoved;
 
 	
-	public King(int r, int c, int color, boolean alive, int type)
+	public King(int r, int c, int color, boolean alive, int type, boolean hasMoved)
 	{
-		super(r,c,color, alive,type);
+		super(r,c,color, alive,type, hasMoved);
 		this.r = r;
 		this.c = c;
 		this.color = color;
 		this.alive = true;
 		this.type = type;
+		this.hasMoved=hasMoved;
 
 	}
 	public void setRow(int x)
@@ -58,7 +60,10 @@ public class King extends Piece
 				arr[r-1][c+1]=true;
 			if(r+1<8 && c-1>=0 && (board[r+1][c-1]==null || board[r+1][c-1].getColor()!=0))
 				arr[r+1][c-1]=true;
-
+			if(hasMoved==false && board[0][0]!=null && board[0][1]==null && board[0][2]==null  && board[0][3]==null && board[0][0].getType()==2 && board[0][0].hasMoved()==false)
+				arr[0][2]=true;
+			if(hasMoved==false && board[0][7]!=null && board[0][5]==null && board[0][6]==null  && board[0][7].getType()==2 && board[0][7].hasMoved()==false)
+				arr[0][6]=true;
 			
 		}
 		else if(color==1)
@@ -79,6 +84,10 @@ public class King extends Piece
 				arr[r-1][c+1]=true;
 			if(r+1<8 && c-1>=0 && (board[r+1][c-1]==null|| board[r+1][c-1].getColor()!=1))
 				arr[r+1][c-1]=true;
+			if(hasMoved==false && board[7][0]!=null && board[7][1]==null && board[7][2]==null  && board[7][0].getType()==2 && board[7][0].hasMoved()==false)
+				arr[7][1]=true;
+			if(hasMoved==false && board[7][7]!=null && board[7][4]==null && board[7][5]==null  && board[7][6]==null && board[7][7].getType()==2 && board[7][7].hasMoved()==false)
+				arr[7][5]=true;
 			
 		}
 		return arr;
@@ -90,6 +99,13 @@ public class King extends Piece
 	public int getCol()
 	{
 		return c;
+	}
+	public boolean hasMoved() {
+		return hasMoved;
+	}
+
+	public void setHasMoved(boolean hasMoved) {
+		this.hasMoved = hasMoved;
 	}
 
 }

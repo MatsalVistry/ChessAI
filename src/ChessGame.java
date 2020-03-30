@@ -32,28 +32,28 @@ public class ChessGame
 		
 		for(int x = 2;x<8;x+=3)
 		{
-			pieces.add(new Bishop(0,x,WHITE, true,4));
-			pieces.add(new Bishop(7,x,BLACK, true,4));
+			pieces.add(new Bishop(0,x,WHITE, true,4, false));
+			pieces.add(new Bishop(7,x,BLACK, true,4, false));
 		}
 		for(int x = 0;x<8;x++)
 		{
-			pieces.add(new Pawn(1,x,WHITE, true,1));
-			pieces.add(new Pawn(6,x,BLACK, true,1));
+			pieces.add(new Pawn(1,x,WHITE, true,1, false));
+			pieces.add(new Pawn(6,x,BLACK, true,1,false));
 		}
 		for(int x = 0;x<8;x+=7)
 		{
-			pieces.add(new Rook(0,x,WHITE, true,2));
-			pieces.add(new Rook(7,x,BLACK, true,2));
+			pieces.add(new Rook(0,x,WHITE, true,2, false));
+			pieces.add(new Rook(7,x,BLACK, true,2, false));
 		}
 		for(int x = 1;x<8;x+=5)
 		{
-			pieces.add(new Knight(0,x,WHITE, true,3));
-			pieces.add(new Knight(7,x,BLACK, true,3));
+			pieces.add(new Knight(0,x,WHITE, true,3,false));
+			pieces.add(new Knight(7,x,BLACK, true,3,false));
 		}
-		pieces.add(new King(0,4,WHITE, true,6));
-		pieces.add(new Queen(0,3,WHITE, true,5));
-		pieces.add(new Queen(7,4,BLACK, true,5));
-		pieces.add(new King(7,3,BLACK, true,6));
+		pieces.add(new King(0,4,WHITE, true,6, false));
+		pieces.add(new Queen(0,3,WHITE, true,5,false));
+		pieces.add(new Queen(7,4,BLACK, true,5,false));
+		pieces.add(new King(7,3,BLACK, true,6,false));
 
 		updateBoard();
 		// doesn't set the empty spaces to null or a different value
@@ -87,22 +87,69 @@ public class ChessGame
     		{
     			piece = pieces.remove(x);
     		}
-
     	}
+    	if(p.getType()==6 && p.getRow()==0&& c-oldc==2 && p.getColor()==WHITE)
+		{
+			for(int x=0;x<pieces.size();x++)
+			{
+				if(pieces.get(x).equals(board[0][7]) && pieces.get(x).hasMoved()==false) {
+					pieces.get(x).setCol(5);
+					pieces.get(x).setHasMoved(true);
+
+				}
+			}
+			System.out.println("YYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYY");
+		}
+		if(p.getType()==6 &&  p.getRow()==0&& c-oldc==-2 && p.getColor()==WHITE)
+		{
+			for(int x=0;x<pieces.size();x++)
+			{
+				if(pieces.get(x).equals(board[0][0]) && pieces.get(x).hasMoved()==false) {
+					pieces.get(x).setCol(3);
+					pieces.get(x).setHasMoved(true);
+				}
+			}
+			System.out.println("YYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYY");
+		}
+		if(p.getType()==6 && p.getRow()==7&& c-oldc==2 && p.getColor()==BLACK)
+		{
+			for(int x=0;x<pieces.size();x++)
+			{
+				if(pieces.get(x).equals(board[7][7]) && pieces.get(x).hasMoved()==false)
+				{
+					pieces.get(x).setCol(4);
+					pieces.get(x).setHasMoved(true);
+				}
+			}
+			System.out.println("YYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYY");
+		}
+		if(p.getType()==6 &&  p.getRow()==7&& c-oldc==-2 && p.getColor()==BLACK)
+		{
+			for(int x=0;x<pieces.size();x++)
+			{
+				if(pieces.get(x).equals(board[7][0]) && pieces.get(x).hasMoved()==false) {
+					pieces.get(x).setCol(2);
+					pieces.get(x).setHasMoved(true);
+
+				}
+			}
+			System.out.println("YYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYY");
+		}
     	p.setRow(r);
     	p.setCol(c);
+    	p.setHasMoved(true);
 
    		updateBoard();
     	return piece;
    	}
-	public void revertMovePiece(int oldr, int oldc, Piece p, Piece pp)
+	public void revertMovePiece(int oldr, int oldc, Piece p, Piece pp, boolean hasMoved)
 	{
 		if(pp!=null)
 			pieces.add(pp);
 
 		p.setRow(oldr);
 		p.setCol(oldc);
-
+		p.setHasMoved(hasMoved);
 		updateBoard();
 
 	}

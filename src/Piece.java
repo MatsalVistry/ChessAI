@@ -5,14 +5,16 @@ public abstract class Piece
 	private boolean alive;
 	private int color;
 	private int type;
+	private boolean hasMoved;
 	
-	public Piece(int r, int c, int color, boolean alive, int type)
+	public Piece(int r, int c, int color, boolean alive, int type, boolean hasMoved)
 	{
 		this.r = r;
 		this.c = c;
 		this.color = color;
 		this.alive = alive;
 		this.type = type;
+		this.hasMoved=hasMoved;
 	}
 	
 	public int getType()
@@ -26,15 +28,15 @@ public abstract class Piece
 	public abstract int getRow();
 
 	public abstract int getCol();
+
+	public abstract boolean hasMoved();
 	
 	public abstract void setRow(int x);
 
-	public void change(int x, int y)
-	{
-		r=x;
-		c=y;
-	}
+
 	public abstract void setCol(int y);
+
+	public abstract void setHasMoved(boolean hasMoved);
 	
 	public abstract boolean[][] getAvailableMoves(Piece[][] board);
 	

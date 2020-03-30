@@ -6,15 +6,17 @@ public class Pawn extends Piece
 	private boolean alive;
 	private int color;
 	private int type ;
+	private boolean hasMoved;
 	
-	public Pawn(int r, int c, int color, boolean alive, int type)
+	public Pawn(int r, int c, int color, boolean alive, int type, boolean hasMoved)
 	{
-		super(r,c,color, alive,type);
+		super(r,c,color, alive,type, hasMoved);
 		this.r = r;
 		this.c = c;
 		this.color = color;
 		this.alive = true;
 		this.type = type;
+		this.hasMoved=hasMoved();
 	}
 	public int getType()
 	{
@@ -72,5 +74,13 @@ public class Pawn extends Piece
 	{
 		return c;
 	}
+
+    public boolean hasMoved() {
+        return hasMoved;
+    }
+
+    public void setHasMoved(boolean hasMoved) {
+        this.hasMoved = hasMoved;
+    }
 
 }

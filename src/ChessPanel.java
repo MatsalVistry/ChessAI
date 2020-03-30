@@ -185,15 +185,15 @@ public class ChessPanel extends JPanel implements MouseListener, KeyListener
     public boolean isValidMove(int oldr, int oldc, int r, int c, Piece p)
     {
     	boolean [][] arr = p.getAvailableMoves(cg.getBoard());
-
+		boolean hm = p.hasMoved();
 		Piece pp = cg.movePiece(oldr,oldc,r,c,p);
     	
     	if(arr[r][c]==true && inCheck(p.getColor())==false)
     	{
-    		cg.revertMovePiece(oldr,oldc, p, pp);
+    		cg.revertMovePiece(oldr,oldc, p, pp, hm);
 			return true;
 		}
-		cg.revertMovePiece(oldr,oldc, p, pp);
+		cg.revertMovePiece(oldr,oldc, p, pp, hm);
 		return false;
     }
     public boolean inCheck(int color)
@@ -274,6 +274,12 @@ public class ChessPanel extends JPanel implements MouseListener, KeyListener
     	        			System.out.print("\n");
     	        		}
     	            }
+					else if (selected != null && e.getX() > x && e.getX() < x+75 && e.getY()>y && e.getY()<y+75 && cg.getBoard()[y/75][x/75]!=null && cg.getBoard()[y/75][x/75].getColor()==cg.WHITE && selected.equals(cg.getBoard()[y/75][x/75])==false)
+					{
+						selected = cg.getBoard()[y/75][x/75];
+						System.out.println("Color:"+ selected.getColor()+" Piece:"+selected.getType());
+
+					}
     				else if (selected != null && e.getX() > x && e.getX() < x+75 && e.getY()>y && e.getY()<y+75 && cg.getBoard()[y/75][x/75]!=null && cg.getBoard()[y/75][x/75].equals(selected)) 
     	    		{
     	                selected = null;
@@ -282,7 +288,6 @@ public class ChessPanel extends JPanel implements MouseListener, KeyListener
     				else if (selected != null && e.getX() > x && e.getX() < x+75 && e.getY()>y && e.getY()<y+75 && (cg.getBoard()[y/75][x/75]==null || cg.getBoard()[y/75][x/75].getColor()!=selected.getColor()) && isValidMove(selected.getRow(),selected.getCol(),y/75,x/75,selected)==true)
     	    		{
     					cg.movePiece(selected.getRow(),selected.getCol(),y/75,x/75, selected);
-    					
     	                selected = null;
     	                cg.setTurn(cg.BLACK);
     	                System.out.println("Successful Move White Player");
@@ -306,6 +311,11 @@ public class ChessPanel extends JPanel implements MouseListener, KeyListener
     	                selected = cg.getBoard()[y/75][x/75];
     	                System.out.println("Color:"+ selected.getColor()+" Piece:"+selected.getType());
     	            }
+					else if (selected != null && e.getX() > x && e.getX() < x+75 && e.getY()>y && e.getY()<y+75 && cg.getBoard()[y/75][x/75]!=null && cg.getBoard()[y/75][x/75].getColor()==cg.BLACK&& selected.equals(cg.getBoard()[y/75][x/75])==false)
+					{
+						selected = cg.getBoard()[y/75][x/75];
+						System.out.println("Color:"+ selected.getColor()+" Piece:"+selected.getType());
+					}
     				else if (selected != null && e.getX() > x && e.getX() < x+75 && e.getY()>y && e.getY()<y+75 && cg.getBoard()[y/75][x/75]!=null && cg.getBoard()[y/75][x/75].equals(selected)) 
     	    		{
     	                selected = null;
@@ -314,8 +324,8 @@ public class ChessPanel extends JPanel implements MouseListener, KeyListener
     				else if (selected != null && e.getX() > x && e.getX() < x+75 && e.getY()>y && e.getY()<y+75 && (cg.getBoard()[y/75][x/75]==null || cg.getBoard()[y/75][x/75].getColor()!=selected.getColor())&& isValidMove(selected.getRow(),selected.getCol(),y/75,x/75,selected)==true)
     	    		{
     					cg.movePiece(selected.getRow(),selected.getCol(),y/75,x/75,selected);
-    	                selected = null;
     	                cg.setTurn(cg.WHITE);
+    	                selected=null;
     	                System.out.println("Successful Move Black Player");
     	                cg.printBoard();
     	                boolean inCheckmate = inCheckmate(cg.WHITE);

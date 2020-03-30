@@ -213,6 +213,8 @@ public class ChessPanel extends JPanel implements MouseListener, KeyListener
         				g.setColor(Color.BLUE);
         				g.fillOval(y*75+25+xOffset, x*75+25, 30, 30);
         			}
+        			if(inCheck(cg.WHITE)==false && inCheck(cg.BLACK)==false)
+        			    cg.getMessages().remove("Check");
         		}
         	}
         }
@@ -332,7 +334,7 @@ public class ChessPanel extends JPanel implements MouseListener, KeyListener
     	inCheck(cg.WHITE);
     	inCheck(cg.BLACK);
     	int xOffset = 100;
-    	if(cg.getStatus()==cg.PLAYING) {
+    	if(cg.getStatus()==cg.PLAYING && cg.getPlayerAmount()!=0) {
 			if (cg.getTurn() == cg.WHITE) {
 				for (int y = 0; y < 600; y += 75) {
 					for (int x = 0+xOffset; x < 600+xOffset; x += 75) {
@@ -376,38 +378,98 @@ public class ChessPanel extends JPanel implements MouseListener, KeyListener
 						}
 					}
 				}
-			} else if (cg.getTurn() == cg.BLACK) {
-				for (int y = 0; y < 600; y += 75) {
-					for (int x = 0+xOffset; x < 600+xOffset; x += 75) {
-						if (selected == null && e.getX() > x && e.getX() < x + 75 && e.getY() > y && e.getY() < y + 75 && cg.getBoard()[y / 75][(x-xOffset) / 75] != null && cg.getBoard()[y / 75][(x-xOffset) / 75].getColor() == cg.BLACK) {
-							selected = cg.getBoard()[y / 75][(x-xOffset) / 75];
-							System.out.println("Color:" + selected.getColor() + " Piece:" + selected.getType());
-						} else if (selected != null && e.getX() > x && e.getX() < x + 75 && e.getY() > y && e.getY() < y + 75 && cg.getBoard()[y / 75][(x-xOffset) / 75] != null && cg.getBoard()[y / 75][(x-xOffset) / 75].getColor() == cg.BLACK && selected.equals(cg.getBoard()[y / 75][(x-xOffset) / 75]) == false) {
-							selected = cg.getBoard()[y / 75][(x-xOffset) / 75];
-							System.out.println("Color:" + selected.getColor() + " Piece:" + selected.getType());
-						} else if (selected != null && e.getX() > x && e.getX() < x + 75 && e.getY() > y && e.getY() < y + 75 && cg.getBoard()[y / 75][(x-xOffset) / 75] != null && cg.getBoard()[y / 75][(x-xOffset) / 75].equals(selected)) {
-							selected = null;
-							System.out.println("Unselected");
-						} else if (selected != null && e.getX() > x && e.getX() < x + 75 && e.getY() > y && e.getY() < y + 75 && (cg.getBoard()[y / 75][(x-xOffset) / 75] == null || cg.getBoard()[y / 75][(x-xOffset) / 75].getColor() != selected.getColor()) && isValidMove(selected.getRow(), selected.getCol(), y / 75, (x-xOffset) / 75, selected) == true) {
-							cg.movePiece(selected.getRow(), selected.getCol(), y / 75, (x-xOffset) / 75, selected);
-							cg.setTurn(cg.WHITE);
-							cg.getMessages().remove("Black's Turn");
-							cg.getMessages().add("White's Turn");
-							selected = null;
-							System.out.println("Successful Move Black Player");
-							cg.printBoard();
+			}
+			if (cg.getTurn() == cg.BLACK)
+			{
+			    if(cg.getPlayerAmount()==cg.TWO_PLAYER) {
+                    for (int y = 0; y < 600; y += 75) {
+                        for (int x = 0 + xOffset; x < 600 + xOffset; x += 75) {
+                            if (selected == null && e.getX() > x && e.getX() < x + 75 && e.getY() > y && e.getY() < y + 75 && cg.getBoard()[y / 75][(x - xOffset) / 75] != null && cg.getBoard()[y / 75][(x - xOffset) / 75].getColor() == cg.BLACK) {
+                                selected = cg.getBoard()[y / 75][(x - xOffset) / 75];
+                                System.out.println("Color:" + selected.getColor() + " Piece:" + selected.getType());
+                            } else if (selected != null && e.getX() > x && e.getX() < x + 75 && e.getY() > y && e.getY() < y + 75 && cg.getBoard()[y / 75][(x - xOffset) / 75] != null && cg.getBoard()[y / 75][(x - xOffset) / 75].getColor() == cg.BLACK && selected.equals(cg.getBoard()[y / 75][(x - xOffset) / 75]) == false) {
+                                selected = cg.getBoard()[y / 75][(x - xOffset) / 75];
+                                System.out.println("Color:" + selected.getColor() + " Piece:" + selected.getType());
+                            } else if (selected != null && e.getX() > x && e.getX() < x + 75 && e.getY() > y && e.getY() < y + 75 && cg.getBoard()[y / 75][(x - xOffset) / 75] != null && cg.getBoard()[y / 75][(x - xOffset) / 75].equals(selected)) {
+                                selected = null;
+                                System.out.println("Unselected");
+                            } else if (selected != null && e.getX() > x && e.getX() < x + 75 && e.getY() > y && e.getY() < y + 75 && (cg.getBoard()[y / 75][(x - xOffset) / 75] == null || cg.getBoard()[y / 75][(x - xOffset) / 75].getColor() != selected.getColor()) && isValidMove(selected.getRow(), selected.getCol(), y / 75, (x - xOffset) / 75, selected) == true) {
+                                cg.movePiece(selected.getRow(), selected.getCol(), y / 75, (x - xOffset) / 75, selected);
+                                cg.setTurn(cg.WHITE);
+                                cg.getMessages().remove("Black's Turn");
+                                cg.getMessages().add("White's Turn");
+                                selected = null;
+                                System.out.println("Successful Move Black Player");
+                                cg.printBoard();
 
-							boolean inCheckmate = inCheckmate(cg.WHITE);
-							if (inCheckmate == true) {
-								cg.getMessages().clear();
-								cg.setStatus(cg.BLACK_WINS);
-								cg.getMessages().set(0,"Black Wins");
-								System.out.println("CHECKMATEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE");
-								cg.getMessages().add("Press r to reset");
-							}
-						}
-					}
-				}
+                                boolean inCheckmate = inCheckmate(cg.WHITE);
+                                if (inCheckmate == true) {
+                                    cg.getMessages().clear();
+                                    cg.setStatus(cg.BLACK_WINS);
+                                    cg.getMessages().set(0, "Black Wins");
+                                    System.out.println("CHECKMATEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE");
+                                    cg.getMessages().add("Press r to reset");
+                                }
+                            }
+                        }
+                    }
+                }
+			    else
+                {
+                    ArrayList<Piece> blackPieces = new ArrayList<>();
+                    ArrayList<Move> moves = new ArrayList<>();
+
+
+                    for(int x=0;x<cg.getPieces().size();x++)
+                    {
+                        if(cg.getPieces().get(x).getColor()==cg.BLACK)
+                            blackPieces.add(cg.getPieces().get(x));
+                    }
+                    for(int x=0;x<blackPieces.size();x++)
+                    {
+                        Piece p = blackPieces.get(x);
+
+                        boolean [][] arr = p.getAvailableMoves(cg.getBoard());
+
+                        for(int xx=0;xx<8;xx++)
+                        {
+                            for(int y=0;y<8;y++)
+                            {
+                                if(arr[xx][y]==true && isValidMove(p.getRow(),p.getCol(),xx,y,p)==true)
+                                {
+                                    moves.add(new Move(p,xx,y));
+                                }
+                                if(inCheck(cg.WHITE)==false && inCheck(cg.BLACK)==false)
+                                    cg.getMessages().remove("Check");
+                            }
+                        }
+                    }
+                    int loc = (int)(Math.random()*moves.size());
+
+                    for(int x=0;x<cg.getPieces().size();x++)
+                    {
+                        if(cg.getPieces().get(x).equals(moves.get(loc).getP()))
+                        {
+                            cg.movePiece(cg.getPieces().get(x).getRow(),cg.getPieces().get(x).getRow(),moves.get(loc).getR(),moves.get(loc).getC(),cg.getPieces().get(x));
+                            cg.setTurn(cg.WHITE);
+                            cg.getMessages().remove("Black's Turn");
+                            cg.getMessages().add("White's Turn");
+                            selected = null;
+                            cg.printBoard();
+
+                            boolean inCheckmate = inCheckmate(cg.WHITE);
+                            if (inCheckmate == true) {
+                                cg.getMessages().clear();
+                                cg.setStatus(cg.BLACK_WINS);
+                                cg.getMessages().set(0, "Black Wins");
+                                System.out.println("CHECKMATEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE");
+                                cg.getMessages().add("Press r to reset");
+                            }
+                        }
+                    }
+
+
+                }
 			}
 			repaint();
 			if(cg.getStatus()!= cg.BLACK_WINS && cg.getStatus()!=cg.WHITE_WINS) {
@@ -444,6 +506,24 @@ public class ChessPanel extends JPanel implements MouseListener, KeyListener
  
     public void keyReleased(KeyEvent e)
 	{
+	    if(cg.getPlayerAmount()==0)
+        {
+            if (e.getKeyChar() == '1')
+            {
+                cg.setPlayerAmount(cg.ONE_PLAYER);
+                cg.getMessages().clear();
+                cg.getMessages().add("White's Turn");
+                repaint();
+            }
+            if (e.getKeyChar() == '2')
+            {
+                cg.setPlayerAmount(cg.TWO_PLAYER);
+                cg.getMessages().clear();
+                cg.getMessages().add("White's Turn");
+                repaint();
+            }
+        }
+
 		if(cg.getStatus()==cg.BLACK_WINS || cg.getStatus()==cg.WHITE_WINS)
 		{
 			if (e.getKeyChar() == 'r')
@@ -550,5 +630,42 @@ public class ChessPanel extends JPanel implements MouseListener, KeyListener
             }
         }
         return img;
+    }
+    public static class Move
+    {
+        Piece p;
+        int r;
+        int c;
+
+        public Move(Piece p, int r, int c)
+        {
+            this.p=p;
+            this.r=r;
+            this.c=c;
+        }
+
+        public Piece getP() {
+            return p;
+        }
+
+        public void setP(Piece p) {
+            this.p = p;
+        }
+
+        public int getR() {
+            return r;
+        }
+
+        public void setR(int r) {
+            this.r = r;
+        }
+
+        public int getC() {
+            return c;
+        }
+
+        public void setC(int c) {
+            this.c = c;
+        }
     }
 }

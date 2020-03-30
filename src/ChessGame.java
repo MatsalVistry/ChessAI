@@ -1,4 +1,5 @@
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.Scanner;
 public class ChessGame
 {
@@ -10,16 +11,25 @@ public class ChessGame
     public static final int BLACK_WINS =4;
 	public static final int TRANSFORMATION_WHITE = 5;
 	public static final int TRANSFORMATION_BLACK = 6;
+    public static final int ONE_PLAYER =7;
+    public static final int TWO_PLAYER =8;
 
-	private Piece[][] board;
+
+
+    private Piece[][] board;
     private int turn;
+    private int playerAmount;
 	ArrayList<Piece> pieces;
 	private ArrayList<String> messages;
 	private ArrayList<Integer> killedWhitePieces;
 	private ArrayList<Integer> killedBlackPieces;
+	private LinkedList<ArrayList<Piece>> ll = new LinkedList<>();
+    private LinkedList<ArrayList<Integer>> llW = new LinkedList<>();
+    private LinkedList<ArrayList<Integer>> llB = new LinkedList<>();
 
 
-	private int status;
+
+    private int status;
  
     public ChessGame()
     {
@@ -43,7 +53,8 @@ public class ChessGame
     	messages.clear();
     	killedBlackPieces.clear();
     	killedWhitePieces.clear();
-    	messages.add("White's Turn");
+    	messages.add("Press 1 for single player and 2 for multiplayer");
+    	playerAmount=0;
 		
 		for(int x = 2;x<8;x+=3)
 		{
@@ -95,6 +106,10 @@ public class ChessGame
 	}
     public Piece movePiece(int oldr, int oldc, int r, int c, Piece p)
    	{
+//   	    ll.addLast((ArrayList<Piece>)pieces.clone());
+//        llW.addLast((ArrayList<Integer>)killedWhitePieces.clone());
+//        llB.addLast((ArrayList<Integer>)killedBlackPieces.clone());
+
    		Piece piece = null;
     	for(int x=0;x<pieces.size();x++)
     	{
@@ -176,6 +191,9 @@ public class ChessGame
    	}
 	public void revertMovePiece(int oldr, int oldc, Piece p, Piece pp, boolean hasMoved)
 	{
+//	    pieces = ll.removeLast();
+//	    killedWhitePieces=llW.removeLast();
+//	    killedBlackPieces=llB.removeLast();
 		if(pp!=null)
 		{
 			pieces.add(pp);
@@ -258,4 +276,12 @@ public class ChessGame
 	public ArrayList<Integer> getKilledBlackPieces() {
 		return killedBlackPieces;
 	}
+
+    public int getPlayerAmount() {
+        return playerAmount;
+    }
+
+    public void setPlayerAmount(int playerAmount) {
+        this.playerAmount = playerAmount;
+    }
 }

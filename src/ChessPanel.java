@@ -40,18 +40,18 @@ public class ChessPanel extends JPanel implements MouseListener, KeyListener
 	private BufferedImage SmallBlackKing = null;
     private Piece selected = null;
 
-    
 
-    
+
+
     public ChessPanel ()
     {
         super();
         addMouseListener(this);
         addKeyListener(this);
- 
+
         setSize(800,700);
-        
-        
+
+
         try
         {
             WhitePawn = ImageIO.read((new File("Images\\WhitePawn.JPG")));
@@ -108,8 +108,8 @@ public class ChessPanel extends JPanel implements MouseListener, KeyListener
         {
             System.out.println("Error Loading Images: " + e.getMessage());
         }
- 
- 
+
+
     }
     public void paint(Graphics g)
     {
@@ -120,7 +120,7 @@ public class ChessPanel extends JPanel implements MouseListener, KeyListener
         g.setColor(Color.white);
         g.fillRect(0,0,600+xOffset*2,700);
 
-        
+
         for(int x=0+xOffset;x<600+xOffset;x+=75)
         {
         	for(int y=0;y<600;y+=75)
@@ -134,7 +134,7 @@ public class ChessPanel extends JPanel implements MouseListener, KeyListener
         		g.fillRect(x, y, 75, 75);
         	}
         }
-        
+
         for(int x=0;x<600;x+=75)
         {
         	for(int y=0+xOffset;y<600+xOffset;y+=75)
@@ -147,7 +147,7 @@ public class ChessPanel extends JPanel implements MouseListener, KeyListener
 	            		{
 	            			g.drawImage(WhitePawn,y,x,null);
 	            		}
-	        			else 
+	        			else
 	            			g.drawImage(BlackPawn,y,x,null);
 	        		}
 	        		if(cg.getBoard()[x/75][(y-xOffset)/75].getType()==2)
@@ -156,7 +156,7 @@ public class ChessPanel extends JPanel implements MouseListener, KeyListener
 	            		{
 	            			g.drawImage(WhiteRook,y,x,null);
 	            		}
-	        			else 
+	        			else
 	            			g.drawImage(BlackRook,y,x,null);
 	        		}
 	        		if(cg.getBoard()[x/75][(y-xOffset)/75].getType()==3)
@@ -165,7 +165,7 @@ public class ChessPanel extends JPanel implements MouseListener, KeyListener
 	            		{
 	            			g.drawImage(WhiteKnight,y,x,null);
 	            		}
-	        			else 
+	        			else
 	            			g.drawImage(BlackKnight,y,x,null);
 	        		}
 	        		if(cg.getBoard()[x/75][(y-xOffset)/75].getType()==4)
@@ -174,7 +174,7 @@ public class ChessPanel extends JPanel implements MouseListener, KeyListener
 	            		{
 	            			g.drawImage(WhiteBishop,y,x,null);
 	            		}
-	        			else 
+	        			else
 	            			g.drawImage(BlackBishop,y,x,null);
 	        		}
 	        		if(cg.getBoard()[x/75][(y-xOffset)/75].getType()==5)
@@ -183,7 +183,7 @@ public class ChessPanel extends JPanel implements MouseListener, KeyListener
 	            		{
 	            			g.drawImage(WhiteQueen,y,x,null);
 	            		}
-	        			else 
+	        			else
 	            			g.drawImage(BlackQueen,y,x,null);
 	        		}
 	        		if(cg.getBoard()[x/75][(y-xOffset)/75].getType()==6)
@@ -192,18 +192,18 @@ public class ChessPanel extends JPanel implements MouseListener, KeyListener
 	            		{
 	            			g.drawImage(WhiteKing,y,x,null);
 	            		}
-	        			else 
+	        			else
 	            			g.drawImage(BlackKing,y,x,null);
 	        		}
         		}
-        		
+
         	}
         }
-        
+
         if(selected!=null)
         {
         	boolean[][] arr = selected.getAvailableMoves(cg.getBoard());
-        	
+
         	for(int x=0;x<8;x++)
         	{
         		for(int y=0;y<8;y++)
@@ -215,10 +215,21 @@ public class ChessPanel extends JPanel implements MouseListener, KeyListener
         			}
         			if(inCheck(cg.WHITE)==false && inCheck(cg.BLACK)==false)
         			    cg.getMessages().remove("Check");
-        		}
+        			if(selected.getType()==1 && selected.getColor()==cg.BLACK && selected.getRow()!=0)
+                        cg.getMessages().remove("press q for queen, r for rook, b for bishop, and k for knight");
+                    if(selected.getType()==1 && selected.getColor()==cg.WHITE && selected.getRow()!=7)
+                        cg.getMessages().remove("press q for queen, r for rook, b for bishop, and k for knight");
+
+                }
         	}
         }
+        if(selected==null && cg.getTurn()==cg.WHITE)
+        {
+            inCheck(cg.WHITE);
 
+        }
+        else if(selected==null && cg.getTurn()==cg.BLACK)
+            inCheck(cg.BLACK);
 		Font trb = new Font("TimesRoman", Font.BOLD, 18);
 		g.setFont(trb);
 		g.setColor(Color.BLUE);
@@ -263,7 +274,7 @@ public class ChessPanel extends JPanel implements MouseListener, KeyListener
 
 		boolean hm = p.hasMoved();
 		Piece pp = cg.movePiece(oldr,oldc,r,c,p);
-    	
+
     	if(arr[r][c]==true && inCheck(p.getColor())==false)
     	{
     		cg.revertMovePiece(oldr,oldc, p, pp, hm);
@@ -288,7 +299,7 @@ public class ChessPanel extends JPanel implements MouseListener, KeyListener
 
     					if(arr[y][z]==true && cg.getBoard()[y][z]!=null && cg.getBoard()[y][z].getType()==6 && cg.getBoard()[y][z].getColor()==color)
     					{
-    						System.out.print("SFHAIUSHFBGYUIASBGYUFBGDUAYSFBYUSDBGYUFBGSEDUFYBUYSDFBGYUBGSDFUYG");
+    	//					System.out.print("SFHAIUSHFBGYUIASBGYUFBGDUAYSFBYUSDBGYUFBGSEDUFYBUYSDFBGYUBGSDFUYG");
     						if(cg.getMessages().contains("Check")==false)
 								cg.getMessages().add("Check");
 							return true;
@@ -328,6 +339,189 @@ public class ChessPanel extends JPanel implements MouseListener, KeyListener
 		}
 		return true;
 	}
+	public void randomAIMove()
+    {
+        ArrayList<Piece> blackPieces = new ArrayList<>();
+        ArrayList<MoveRandom> moves = new ArrayList<>();
+
+
+        for(int x=0;x<cg.getPieces().size();x++)
+        {
+            if(cg.getPieces().get(x).getColor()==cg.BLACK)
+                blackPieces.add(cg.getPieces().get(x));
+        }
+        for(int x=0;x<blackPieces.size();x++)
+        {
+            Piece p = blackPieces.get(x);
+
+            boolean [][] arr = p.getAvailableMoves(cg.getBoard());
+
+            for(int xx=0;xx<8;xx++)
+            {
+                for(int y=0;y<8;y++)
+                {
+                    if(arr[xx][y]==true && isValidMove(p.getRow(),p.getCol(),xx,y,p)==true)
+                    {
+                        moves.add(new MoveRandom(p,xx,y));
+                    }
+                    if(inCheck(cg.WHITE)==false && inCheck(cg.BLACK)==false)
+                        cg.getMessages().remove("Check");
+                }
+            }
+        }
+        int loc = (int)(Math.random()*moves.size());
+
+        for(int x=0;x<cg.getPieces().size();x++)
+        {
+            if(cg.getPieces().get(x).equals(moves.get(loc).getP()))
+            {
+                cg.movePiece(cg.getPieces().get(x).getRow(),cg.getPieces().get(x).getCol(),moves.get(loc).getR(),moves.get(loc).getC(),cg.getPieces().get(x));
+                cg.setTurn(cg.WHITE);
+                cg.getMessages().remove("Black's Turn");
+                cg.getMessages().add("White's Turn");
+                selected = null;
+    //            cg.printBoard();
+
+                boolean inCheckmate = inCheckmate(cg.WHITE);
+                if (inCheckmate == true) {
+                    cg.getMessages().clear();
+                    cg.setStatus(cg.BLACK_WINS);
+                    cg.getMessages().set(0, "Black Wins");
+     //               System.out.println("CHECKMATEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE");
+                    cg.getMessages().add("Press r to reset");
+                }
+            }
+        }
+        if(cg.getStatus()==cg.TRANSFORMATION_BLACK)
+        {
+            for(int x=0;x<cg.getPieces().size();x++)
+            {
+                if (cg.getPieces().get(x).getType() == 1 && cg.getPieces().get(x).getRow() == 0)
+                {
+                    Piece p = cg.getPieces().remove(x);
+
+
+                    cg.getPieces().add(new Queen(p.getRow(), p.getCol(), p.getColor(), true, 5, true));
+                    cg.setStatus(cg.PLAYING);
+                    cg.getMessages().remove("press q for queen, r for rook, b for bishop, and k for knight");
+                }
+            }
+            cg.updateBoard();
+            repaint();
+        }
+
+    }
+    public void easyAIMove()
+    {
+        ArrayList<Piece> blackPieces = new ArrayList<>();
+        ArrayList<MoveWeight> moves = new ArrayList<>();
+        cg.updateBoard();
+        cg.printBoard();
+
+        MoveWeight bestMove = null;
+        for(int x=0;x<cg.getPieces().size();x++)
+        {
+            if(cg.getPieces().get(x).getColor()==cg.BLACK)
+                blackPieces.add(cg.getPieces().get(x));
+        }
+        for(int x=0;x<blackPieces.size();x++)
+        {
+            Piece p = blackPieces.get(x);
+
+            boolean [][] arr = p.getAvailableMoves(cg.getBoard());
+
+
+
+            for(int xx=0;xx<8;xx++)
+            {
+                for(int y=0;y<8;y++)
+                {
+                    if(arr[xx][y]==true && isValidMove(p.getRow(),p.getCol(),xx,y,p)==true)
+                    {
+                        if(bestMove==null) {
+                            System.out.println("MMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMM");
+                            bestMove = new MoveWeight(p, xx, y, 0);
+                        }
+
+                        if(cg.getBoard()[xx][y]!=null)
+                        {
+
+
+                            if(cg.getBoard()[xx][y].getWeight()>bestMove.getWeight())
+                            {
+                                System.out.println("BEST MOVE WEIGHT:::::::::::::::::::::::::::::::::::::::::::::::"+bestMove.getWeight());
+                                System.out.println("NEW MOVE WEIGHT:::::::::::::::::::::::::::::::::::::::::::::::"+cg.getBoard()[xx][y].getWeight());
+
+                          //      bestMove=new MoveWeight(p, xx, y, cg.getBoard()[xx][y].getWeight());
+                                bestMove.setP(p);
+                                bestMove.setR(xx);
+                                bestMove.setC(y);
+                                bestMove.setWeight(cg.getBoard()[xx][y].getWeight());
+                            }
+                            else if(cg.getBoard()[xx][y].getWeight()==bestMove.getWeight() && p.getWeight()<bestMove.getP().getWeight())
+                            {
+                                bestMove.setP(p);
+                                bestMove.setR(xx);
+                                bestMove.setC(y);
+                                bestMove.setWeight(cg.getBoard()[xx][y].getWeight());
+                            }
+                        }
+                    }
+                    if(inCheck(cg.WHITE)==false && inCheck(cg.BLACK)==false)
+                        cg.getMessages().remove("Check");
+                }
+            }
+        }
+        System.out.println(bestMove.getP().getRow()+"                                          "+bestMove.getP().getCol()+"                     "+bestMove.getWeight());
+
+
+        if(bestMove.getWeight()==0) {
+            System.out.println("PPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPP");
+            randomAIMove();
+        }
+        else {
+            for (int x = 0; x < cg.getPieces().size(); x++) {
+                if (cg.getPieces().get(x).equals(bestMove.getP())) {
+                    cg.movePiece(cg.getPieces().get(x).getRow(), cg.getPieces().get(x).getCol(), bestMove.getR(), bestMove.getC(), cg.getPieces().get(x));
+                    cg.setTurn(cg.WHITE);
+                    cg.getMessages().remove("Black's Turn");
+                    cg.getMessages().add("White's Turn");
+                    selected = null;
+        //            cg.printBoard();
+
+                    boolean inCheckmate = inCheckmate(cg.WHITE);
+                    if (inCheckmate == true) {
+                        cg.getMessages().clear();
+                        cg.setStatus(cg.BLACK_WINS);
+                        cg.getMessages().set(0, "Black Wins");
+        //                System.out.println("CHECKMATEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE");
+                        cg.getMessages().add("Press r to reset");
+                    }
+                }
+            }
+        }
+        if(cg.getStatus()==cg.TRANSFORMATION_BLACK)
+        {
+            for(int x=0;x<cg.getPieces().size();x++)
+            {
+                if (cg.getPieces().get(x).getType() == 1 && cg.getPieces().get(x).getRow() == 0)
+                {
+                    Piece p = cg.getPieces().remove(x);
+
+
+                    cg.getPieces().add(new Queen(p.getRow(), p.getCol(), p.getColor(), true, 5, true));
+                    cg.setStatus(cg.PLAYING);
+                    cg.getMessages().remove("press q for queen, r for rook, b for bishop, and k for knight");
+                }
+            }
+            cg.updateBoard();
+            repaint();
+        }
+
+
+
+
+    }
  
     public void mouseClicked(MouseEvent e)
     {
@@ -340,38 +534,38 @@ public class ChessPanel extends JPanel implements MouseListener, KeyListener
 					for (int x = 0+xOffset; x < 600+xOffset; x += 75) {
 						if (selected == null && e.getX() > x && e.getX() < x + 75 && e.getY() > y && e.getY() < y + 75 && cg.getBoard()[y / 75][(x-xOffset) / 75] != null && cg.getBoard()[y / 75][(x-xOffset) / 75].getColor() == cg.WHITE) {
 							selected = cg.getBoard()[y / 75][(x-xOffset) / 75];
-							System.out.println("Color:" + selected.getColor() + " Piece:" + selected.getType());
+			//				System.out.println("Color:" + selected.getColor() + " Piece:" + selected.getType());
 
 							boolean[][] arr = selected.getAvailableMoves(cg.getBoard());
 
-							for (int z = 0; z < 8; z++) {
-								for (int c = 0; c < 8; c++) {
-									System.out.print(arr[z][c]);
-								}
-								System.out.print("\n");
-							}
+//							for (int z = 0; z < 8; z++) {
+//								for (int c = 0; c < 8; c++) {
+//									System.out.print(arr[z][c]);
+//								}
+//								System.out.print("\n");
+//							}
 						} else if (selected != null && e.getX() > x && e.getX() < x + 75 && e.getY() > y && e.getY() < y + 75 && cg.getBoard()[y / 75][(x-xOffset) / 75] != null && cg.getBoard()[y / 75][(x-xOffset) / 75].getColor() == cg.WHITE && selected.equals(cg.getBoard()[y / 75][(x-xOffset) / 75]) == false) {
 							selected = cg.getBoard()[y / 75][(x-xOffset) / 75];
-							System.out.println("Color:" + selected.getColor() + " Piece:" + selected.getType());
+		//					System.out.println("Color:" + selected.getColor() + " Piece:" + selected.getType());
 
 						} else if (selected != null && e.getX() > x && e.getX() < x + 75 && e.getY() > y && e.getY() < y + 75 && cg.getBoard()[y / 75][(x-xOffset) / 75] != null && cg.getBoard()[y / 75][(x-xOffset) / 75].equals(selected)) {
 							selected = null;
-							System.out.println("Unselected");
+		//					System.out.println("Unselected");
 						} else if (selected != null && e.getX() > x && e.getX() < x + 75 && e.getY() > y && e.getY() < y + 75 && (cg.getBoard()[y / 75][(x-xOffset) / 75] == null || cg.getBoard()[y / 75][(x-xOffset) / 75].getColor() != selected.getColor()) && isValidMove(selected.getRow(), selected.getCol(), y / 75, (x-xOffset) / 75, selected) == true) {
 							cg.movePiece(selected.getRow(), selected.getCol(), y / 75, (x-xOffset) / 75, selected);
 							selected = null;
 							cg.setTurn(cg.BLACK);
 							cg.getMessages().remove("White's Turn");
 							cg.getMessages().add("Black's Turn");
-							System.out.println("Successful Move White Player");
-							cg.printBoard();
+			//				System.out.println("Successful Move White Player");
+			//				cg.printBoard();
 
 							boolean inCheckmate = inCheckmate(cg.BLACK);
 							if (inCheckmate == true) {
 								cg.getMessages().clear();
 								cg.setStatus(cg.WHITE_WINS);
-								cg.getMessages().set(0,"White Wins!");
-								System.out.println("CHECKMATEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE");
+								cg.getMessages().add("White Wins!");
+		//						System.out.println("CHECKMATEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE");
 								cg.getMessages().add("Press r to reset");
 							}
 
@@ -386,28 +580,29 @@ public class ChessPanel extends JPanel implements MouseListener, KeyListener
                         for (int x = 0 + xOffset; x < 600 + xOffset; x += 75) {
                             if (selected == null && e.getX() > x && e.getX() < x + 75 && e.getY() > y && e.getY() < y + 75 && cg.getBoard()[y / 75][(x - xOffset) / 75] != null && cg.getBoard()[y / 75][(x - xOffset) / 75].getColor() == cg.BLACK) {
                                 selected = cg.getBoard()[y / 75][(x - xOffset) / 75];
-                                System.out.println("Color:" + selected.getColor() + " Piece:" + selected.getType());
+          //                      System.out.println("Color:" + selected.getColor() + " Piece:" + selected.getType());
                             } else if (selected != null && e.getX() > x && e.getX() < x + 75 && e.getY() > y && e.getY() < y + 75 && cg.getBoard()[y / 75][(x - xOffset) / 75] != null && cg.getBoard()[y / 75][(x - xOffset) / 75].getColor() == cg.BLACK && selected.equals(cg.getBoard()[y / 75][(x - xOffset) / 75]) == false) {
                                 selected = cg.getBoard()[y / 75][(x - xOffset) / 75];
-                                System.out.println("Color:" + selected.getColor() + " Piece:" + selected.getType());
+          //                      System.out.println("Color:" + selected.getColor() + " Piece:" + selected.getType());
                             } else if (selected != null && e.getX() > x && e.getX() < x + 75 && e.getY() > y && e.getY() < y + 75 && cg.getBoard()[y / 75][(x - xOffset) / 75] != null && cg.getBoard()[y / 75][(x - xOffset) / 75].equals(selected)) {
                                 selected = null;
-                                System.out.println("Unselected");
+          //                      System.out.println("Unselected");
                             } else if (selected != null && e.getX() > x && e.getX() < x + 75 && e.getY() > y && e.getY() < y + 75 && (cg.getBoard()[y / 75][(x - xOffset) / 75] == null || cg.getBoard()[y / 75][(x - xOffset) / 75].getColor() != selected.getColor()) && isValidMove(selected.getRow(), selected.getCol(), y / 75, (x - xOffset) / 75, selected) == true) {
                                 cg.movePiece(selected.getRow(), selected.getCol(), y / 75, (x - xOffset) / 75, selected);
                                 cg.setTurn(cg.WHITE);
                                 cg.getMessages().remove("Black's Turn");
                                 cg.getMessages().add("White's Turn");
                                 selected = null;
-                                System.out.println("Successful Move Black Player");
-                                cg.printBoard();
+           //                     System.out.println("Successful Move Black Player");
+             //                   cg.printBoard();
+                            //    inCheck(cg.WHITE);
 
                                 boolean inCheckmate = inCheckmate(cg.WHITE);
                                 if (inCheckmate == true) {
                                     cg.getMessages().clear();
                                     cg.setStatus(cg.BLACK_WINS);
-                                    cg.getMessages().set(0, "Black Wins");
-                                    System.out.println("CHECKMATEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE");
+                                    cg.getMessages().add("Black Wins");
+        //                            System.out.println("CHECKMATEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE");
                                     cg.getMessages().add("Press r to reset");
                                 }
                             }
@@ -416,66 +611,16 @@ public class ChessPanel extends JPanel implements MouseListener, KeyListener
                 }
 			    else
                 {
-                    ArrayList<Piece> blackPieces = new ArrayList<>();
-                    ArrayList<Move> moves = new ArrayList<>();
-
-
-                    for(int x=0;x<cg.getPieces().size();x++)
-                    {
-                        if(cg.getPieces().get(x).getColor()==cg.BLACK)
-                            blackPieces.add(cg.getPieces().get(x));
-                    }
-                    for(int x=0;x<blackPieces.size();x++)
-                    {
-                        Piece p = blackPieces.get(x);
-
-                        boolean [][] arr = p.getAvailableMoves(cg.getBoard());
-
-                        for(int xx=0;xx<8;xx++)
-                        {
-                            for(int y=0;y<8;y++)
-                            {
-                                if(arr[xx][y]==true && isValidMove(p.getRow(),p.getCol(),xx,y,p)==true)
-                                {
-                                    moves.add(new Move(p,xx,y));
-                                }
-                                if(inCheck(cg.WHITE)==false && inCheck(cg.BLACK)==false)
-                                    cg.getMessages().remove("Check");
-                            }
-                        }
-                    }
-                    int loc = (int)(Math.random()*moves.size());
-
-                    for(int x=0;x<cg.getPieces().size();x++)
-                    {
-                        if(cg.getPieces().get(x).equals(moves.get(loc).getP()))
-                        {
-                            cg.movePiece(cg.getPieces().get(x).getRow(),cg.getPieces().get(x).getRow(),moves.get(loc).getR(),moves.get(loc).getC(),cg.getPieces().get(x));
-                            cg.setTurn(cg.WHITE);
-                            cg.getMessages().remove("Black's Turn");
-                            cg.getMessages().add("White's Turn");
-                            selected = null;
-                            cg.printBoard();
-
-                            boolean inCheckmate = inCheckmate(cg.WHITE);
-                            if (inCheckmate == true) {
-                                cg.getMessages().clear();
-                                cg.setStatus(cg.BLACK_WINS);
-                                cg.getMessages().set(0, "Black Wins");
-                                System.out.println("CHECKMATEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE");
-                                cg.getMessages().add("Press r to reset");
-                            }
-                        }
-                    }
-
-
+               //   randomAIMove();
+                    easyAIMove();
                 }
 			}
+			inCheck(cg.WHITE);
+            inCheck(cg.BLACK);
 			repaint();
-			if(cg.getStatus()!= cg.BLACK_WINS && cg.getStatus()!=cg.WHITE_WINS) {
-				inCheck(cg.WHITE);
-				inCheck(cg.BLACK);
-			}
+	//		if(cg.getStatus()!= cg.BLACK_WINS && cg.getStatus()!=cg.WHITE_WINS) {
+
+	//		}
 		}
     }
  
@@ -532,34 +677,41 @@ public class ChessPanel extends JPanel implements MouseListener, KeyListener
 				repaint();
 			}
 		}
-		else if(cg.getStatus()==cg.TRANSFORMATION_WHITE)
+		else if(cg.getStatus()==cg.TRANSFORMATION_WHITE )
 		{
 
 			for(int x=0;x<cg.getPieces().size();x++)
 			{
 				if(cg.getPieces().get(x).getType()==1 && cg.getPieces().get(x).getRow()==7)
 				{
-					Piece p = cg.getPieces().remove(x);
+					Piece p;
 					if(e.getKeyChar()=='q')
 					{
+                        p = cg.getPieces().remove(x);
 						cg.getPieces().add(new Queen(p.getRow(), p.getCol(), p.getColor(), true, 5, true));
 						cg.setStatus(cg.PLAYING);
 						cg.getMessages().remove("press q for queen, r for rook, b for bishop, and k for knight");
 					}
 					if(e.getKeyChar()=='r') {
-						cg.getPieces().add(new Rook(p.getRow(), p.getCol(), p.getColor(), true, 2, true));
+                        p = cg.getPieces().remove(x);
+
+                        cg.getPieces().add(new Rook(p.getRow(), p.getCol(), p.getColor(), true, 2, true));
 						cg.setStatus(cg.PLAYING);
 						cg.getMessages().remove("press q for queen, r for rook, b for bishop, and k for knight");
 
 					}
 					if(e.getKeyChar()=='b') {
-						cg.getPieces().add(new Bishop(p.getRow(), p.getCol(), p.getColor(), true, 4, true));
+                        p = cg.getPieces().remove(x);
+
+                        cg.getPieces().add(new Bishop(p.getRow(), p.getCol(), p.getColor(), true, 4, true));
 						cg.setStatus(cg.PLAYING);
 						cg.getMessages().remove("press q for queen, r for rook, b for bishop, and k for knight");
 
 					}
 					if(e.getKeyChar()=='k') {
-						cg.getPieces().add(new Knight(p.getRow(), p.getCol(), p.getColor(), true, 3, true));
+                        p = cg.getPieces().remove(x);
+
+                        cg.getPieces().add(new Knight(p.getRow(), p.getCol(), p.getColor(), true, 3, true));
 						cg.setStatus(cg.PLAYING);
 						cg.getMessages().remove("press q for queen, r for rook, b for bishop, and k for knight");
 
@@ -568,34 +720,42 @@ public class ChessPanel extends JPanel implements MouseListener, KeyListener
 			}
 			cg.updateBoard();
 		}
-		else if(cg.getStatus()==cg.TRANSFORMATION_BLACK)
+		else if(cg.getStatus()==cg.TRANSFORMATION_BLACK && cg.getPlayerAmount()==cg.TWO_PLAYER)
 		{
 
 			for(int x=0;x<cg.getPieces().size();x++)
 			{
 				if(cg.getPieces().get(x).getType()==1 && cg.getPieces().get(x).getRow()==0)
 				{
-					Piece p = cg.getPieces().remove(x);
+					Piece p;
 					if(e.getKeyChar()=='q') {
-						cg.getPieces().add(new Queen(p.getRow(), p.getCol(), p.getColor(), true, 5, true));
+                        p = cg.getPieces().remove(x);
+
+                        cg.getPieces().add(new Queen(p.getRow(), p.getCol(), p.getColor(), true, 5, true));
 						cg.setStatus(cg.PLAYING);
 						cg.getMessages().remove("press q for queen, r for rook, b for bishop, and k for knight");
 
 					}
 					if(e.getKeyChar()=='r') {
-						cg.getPieces().add(new Rook(p.getRow(), p.getCol(), p.getColor(), true, 2, true));
+                        p = cg.getPieces().remove(x);
+
+                        cg.getPieces().add(new Rook(p.getRow(), p.getCol(), p.getColor(), true, 2, true));
 						cg.setStatus(cg.PLAYING);
 						cg.getMessages().remove("press q for queen, r for rook, b for bishop, and k for knight");
 
 					}
 					if(e.getKeyChar()=='b') {
-						cg.getPieces().add(new Bishop(p.getRow(), p.getCol(), p.getColor(), true, 4, true));
+                        p = cg.getPieces().remove(x);
+
+                        cg.getPieces().add(new Bishop(p.getRow(), p.getCol(), p.getColor(), true, 4, true));
 						cg.setStatus(cg.PLAYING);
 						cg.getMessages().remove("press q for queen, r for rook, b for bishop, and k for knight");
 
 					}
 					if(e.getKeyChar()=='k') {
-						cg.getPieces().add(new Knight(p.getRow(), p.getCol(), p.getColor(), true, 3, true));
+                        p = cg.getPieces().remove(x);
+
+                        cg.getPieces().add(new Knight(p.getRow(), p.getCol(), p.getColor(), true, 3, true));
 						cg.setStatus(cg.PLAYING);
 						cg.getMessages().remove("press q for queen, r for rook, b for bishop, and k for knight");
 
@@ -631,13 +791,13 @@ public class ChessPanel extends JPanel implements MouseListener, KeyListener
         }
         return img;
     }
-    public static class Move
+    public static class MoveRandom
     {
         Piece p;
         int r;
         int c;
 
-        public Move(Piece p, int r, int c)
+        public MoveRandom(Piece p, int r, int c)
         {
             this.p=p;
             this.r=r;
@@ -666,6 +826,52 @@ public class ChessPanel extends JPanel implements MouseListener, KeyListener
 
         public void setC(int c) {
             this.c = c;
+        }
+    }
+    public static class MoveWeight
+    {
+        Piece p;
+        int r;
+        int c;
+        int weight;
+
+        public MoveWeight(Piece p, int r, int c, int weight)
+        {
+            this.p=p;
+            this.r=r;
+            this.c=c;
+        }
+
+        public Piece getP() {
+            return p;
+        }
+
+        public void setP(Piece p) {
+            this.p = p;
+        }
+
+        public int getR() {
+            return r;
+        }
+
+        public void setR(int r) {
+            this.r = r;
+        }
+
+        public int getC() {
+            return c;
+        }
+
+        public void setC(int c) {
+            this.c = c;
+        }
+
+        public int getWeight() {
+            return weight;
+        }
+
+        public void setWeight(int weight) {
+            this.weight = weight;
         }
     }
 }

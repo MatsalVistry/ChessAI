@@ -7,17 +7,19 @@ public class Queen extends Piece
 	private int color;
 	private int type ;
 	private boolean hasMoved;
+	private int weight;
 
 	
 	public Queen(int r, int c, int color, boolean alive, int type, boolean hasMoved)
 	{
-		super(r,c,color, alive, type, hasMoved);
+		super(r,c,color, alive, type, hasMoved,90);
 		this.r = r;
 		this.c = c;
 		this.color = color;
 		this.alive = true;
 		this.type = type;
 		this.hasMoved=hasMoved;
+		weight = 90;
 
 	}
 
@@ -286,6 +288,13 @@ public class Queen extends Piece
 	public int getCol()
 	{
 		return c;
+	}
+	public int getWeight() {
+		return weight;
+	}
+
+	public void setWeight(int weight) {
+		this.weight = weight;
 	}
 
 	public boolean hasMoved() {

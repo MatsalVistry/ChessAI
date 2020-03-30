@@ -7,17 +7,19 @@ public class King extends Piece
 	private int color;
 	private int type ;
 	private boolean hasMoved;
+	private int weight;
 
 	
 	public King(int r, int c, int color, boolean alive, int type, boolean hasMoved)
 	{
-		super(r,c,color, alive,type, hasMoved);
+		super(r,c,color, alive,type, hasMoved, 900);
 		this.r = r;
 		this.c = c;
 		this.color = color;
 		this.alive = true;
 		this.type = type;
 		this.hasMoved=hasMoved;
+		weight=900;
 
 	}
 	public void setRow(int x)
@@ -104,7 +106,15 @@ public class King extends Piece
 		return hasMoved;
 	}
 
-	public void setHasMoved(boolean hasMoved) {
+    public int getWeight() {
+        return weight;
+    }
+
+    public void setWeight(int weight) {
+        this.weight = weight;
+    }
+
+    public void setHasMoved(boolean hasMoved) {
 		this.hasMoved = hasMoved;
 	}
 

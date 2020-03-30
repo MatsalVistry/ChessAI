@@ -14,7 +14,9 @@ public class ChessGame
 	private Piece[][] board;
     private int turn;
 	ArrayList<Piece> pieces;
-	
+	private ArrayList<String> messages;
+
+
 	private int status;
  
     public ChessGame()
@@ -23,6 +25,7 @@ public class ChessGame
 
         board = new Piece[8][8];
         pieces = new ArrayList<Piece>();
+		messages = new ArrayList<>();
         reset();
         printBoard();
         
@@ -33,6 +36,8 @@ public class ChessGame
     	turn = WHITE;
     	pieces.clear();
     	status = PLAYING;
+    	messages.clear();
+    	messages.add("White's Turn");
 		
 		for(int x = 2;x<8;x+=3)
 		{
@@ -140,10 +145,17 @@ public class ChessGame
 			}
 			System.out.println("YYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYY");
 		}
-		if(r==0 && p.getType()==1 && p.getColor()==BLACK)
+		if(r==0 && p.getType()==1 && p.getColor()==BLACK) {
+			if(messages.contains("press q for queen, r for rook, b for bishop, and k for knight")==false)
+				messages.add("press q for queen, r for rook, b for bishop, and k for knight");
 			status = TRANSFORMATION_BLACK;
-		if(r==7 && p.getType()==1 && p.getColor()==WHITE)
+		}
+		if(r==7 && p.getType()==1 && p.getColor()==WHITE) {
+			if(messages.contains("press q for queen, r for rook, b for bishop, and k for knight")==false)
+				messages.add("press q for queen, r for rook, b for bishop, and k for knight");
 			status = TRANSFORMATION_WHITE;
+		}
+
 
     	p.setRow(r);
     	p.setCol(c);
@@ -219,5 +231,7 @@ public class ChessGame
     	turn = x;
     }
 
-
+	public ArrayList<String> getMessages() {
+		return messages;
+	}
 }

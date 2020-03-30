@@ -15,6 +15,8 @@ public class ChessGame
     private int turn;
 	ArrayList<Piece> pieces;
 	private ArrayList<String> messages;
+	private ArrayList<Integer> killedWhitePieces;
+	private ArrayList<Integer> killedBlackPieces;
 
 
 	private int status;
@@ -22,10 +24,11 @@ public class ChessGame
     public ChessGame()
     {
         Scanner keyboard = new Scanner(System.in);
-
         board = new Piece[8][8];
         pieces = new ArrayList<Piece>();
 		messages = new ArrayList<>();
+		killedWhitePieces = new ArrayList<>();
+		killedBlackPieces = new ArrayList<>();
         reset();
         printBoard();
         
@@ -36,7 +39,10 @@ public class ChessGame
     	turn = WHITE;
     	pieces.clear();
     	status = PLAYING;
+		pieces.clear();
     	messages.clear();
+    	killedBlackPieces.clear();
+    	killedWhitePieces.clear();
     	messages.add("White's Turn");
 		
 		for(int x = 2;x<8;x+=3)
@@ -95,6 +101,10 @@ public class ChessGame
     		if(pieces.get(x).getRow()==r && pieces.get(x).getCol()==c && pieces.get(x).getColor()!=p.getColor())
     		{
     			piece = pieces.remove(x);
+    			if(piece.getColor()==WHITE)
+    				killedWhitePieces.add(piece.getType());
+    			else
+    				killedBlackPieces.add(piece.getType());
     		}
     	}
     	if(p.getType()==6 && p.getRow()==0&& c-oldc==2 && p.getColor()==WHITE)
@@ -167,7 +177,13 @@ public class ChessGame
 	public void revertMovePiece(int oldr, int oldc, Piece p, Piece pp, boolean hasMoved)
 	{
 		if(pp!=null)
+		{
 			pieces.add(pp);
+			if(pp.getColor()==WHITE)
+				killedWhitePieces.remove(Integer.valueOf(pp.getType()));
+			else
+				killedBlackPieces.remove(Integer.valueOf(pp.getType()));
+		}
 
 		p.setRow(oldr);
 		p.setCol(oldc);
@@ -233,5 +249,13 @@ public class ChessGame
 
 	public ArrayList<String> getMessages() {
 		return messages;
+	}
+
+	public ArrayList<Integer> getKilledWhitePieces() {
+		return killedWhitePieces;
+	}
+
+	public ArrayList<Integer> getKilledBlackPieces() {
+		return killedBlackPieces;
 	}
 }

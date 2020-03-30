@@ -5,14 +5,17 @@ public class ChessGame
 
     public static final int WHITE =0;
     public static final int BLACK =1;
-    public static final int WHITE_WINS =8;
-    public static final int BLACK_WINS =9;
+    public static final int PLAYING = 2;
+    public static final int WHITE_WINS =3;
+    public static final int BLACK_WINS =4;
+	public static final int TRANSFORMATION_WHITE = 5;
+	public static final int TRANSFORMATION_BLACK = 6;
 
-    private Piece[][] board;
+	private Piece[][] board;
     private int turn;
 	ArrayList<Piece> pieces;
 	
-	
+	private int status;
  
     public ChessGame()
     {
@@ -20,15 +23,16 @@ public class ChessGame
 
         board = new Piece[8][8];
         pieces = new ArrayList<Piece>();
-        reset(pieces);
+        reset();
         printBoard();
         
     }
     
-    public void reset(ArrayList<Piece>pieces)
+    public void reset()
     {
     	turn = WHITE;
     	pieces.clear();
+    	status = PLAYING;
 		
 		for(int x = 2;x<8;x+=3)
 		{
@@ -92,10 +96,10 @@ public class ChessGame
 		{
 			for(int x=0;x<pieces.size();x++)
 			{
-				if(pieces.get(x).equals(board[0][7]) && pieces.get(x).hasMoved()==false) {
+				if(pieces.get(x).equals(board[0][7]) && pieces.get(x).hasMoved()==false)
+				{
 					pieces.get(x).setCol(5);
 					pieces.get(x).setHasMoved(true);
-
 				}
 			}
 			System.out.println("YYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYY");
@@ -104,7 +108,8 @@ public class ChessGame
 		{
 			for(int x=0;x<pieces.size();x++)
 			{
-				if(pieces.get(x).equals(board[0][0]) && pieces.get(x).hasMoved()==false) {
+				if(pieces.get(x).equals(board[0][0]) && pieces.get(x).hasMoved()==false)
+				{
 					pieces.get(x).setCol(3);
 					pieces.get(x).setHasMoved(true);
 				}
@@ -127,14 +132,19 @@ public class ChessGame
 		{
 			for(int x=0;x<pieces.size();x++)
 			{
-				if(pieces.get(x).equals(board[7][0]) && pieces.get(x).hasMoved()==false) {
+				if(pieces.get(x).equals(board[7][0]) && pieces.get(x).hasMoved()==false)
+				{
 					pieces.get(x).setCol(2);
 					pieces.get(x).setHasMoved(true);
-
 				}
 			}
 			System.out.println("YYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYY");
 		}
+		if(r==0 && p.getType()==1 && p.getColor()==BLACK)
+			status = TRANSFORMATION_BLACK;
+		if(r==7 && p.getType()==1 && p.getColor()==WHITE)
+			status = TRANSFORMATION_WHITE;
+
     	p.setRow(r);
     	p.setCol(c);
     	p.setHasMoved(true);
@@ -150,6 +160,8 @@ public class ChessGame
 		p.setRow(oldr);
 		p.setCol(oldc);
 		p.setHasMoved(hasMoved);
+		if(status==TRANSFORMATION_BLACK || status==TRANSFORMATION_WHITE)
+			status=PLAYING;
 		updateBoard();
 
 	}
@@ -184,15 +196,21 @@ public class ChessGame
 		}
     }
  
-    public int status()
-    {
-    	return -1;
-    }
+
     public Piece[][] getBoard()
     {
     	return board;
     }
-    public int getTurn()
+
+	public int getStatus() {
+		return status;
+	}
+
+	public void setStatus(int status) {
+		this.status = status;
+	}
+
+	public int getTurn()
     {
     	return turn;
     }

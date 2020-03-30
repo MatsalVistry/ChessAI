@@ -165,22 +165,14 @@ public class ChessPanel extends JPanel implements MouseListener, KeyListener
         	{
         		for(int y=0;y<8;y++)
         		{
-        			
         			if(arr[x][y]==true)
         			{
         				g.setColor(Color.BLUE);
         				g.fillOval(y*75+25, x*75+25, 30, 30);
         			}
-        			
         		}
         	}
         }
-        
-        
-        
-        
-       
- 
     }
     public boolean isValidMove(int oldr, int oldc, int r, int c, Piece p)
     {
@@ -252,92 +244,73 @@ public class ChessPanel extends JPanel implements MouseListener, KeyListener
  
     public void mouseClicked(MouseEvent e)
     {
-    	if(cg.getTurn() == cg.WHITE)
-    	{
-    		for(int y=0;y<600;y+=75)
-    		{
-    			for(int x=0;x<600;x+=75)
-    			{
-    				if (selected == null && e.getX() > x && e.getX() < x+75 && e.getY()>y && e.getY()<y+75 && cg.getBoard()[y/75][x/75]!=null && cg.getBoard()[y/75][x/75].getColor()==cg.WHITE) 
-    	    		{
-    	                selected = cg.getBoard()[y/75][x/75];
-    	                System.out.println("Color:"+ selected.getColor()+" Piece:"+selected.getType());
-    	                
-    	                boolean [][] arr = selected.getAvailableMoves(cg.getBoard());
-    	            	
-    	            	for(int z=0;z<8;z++)
-    	        		{
-    	        			for(int c=0; c<8; c++)
-    	        			{
-    	        				System.out.print(arr[z][c]);
-    	        			}
-    	        			System.out.print("\n");
-    	        		}
-    	            }
-					else if (selected != null && e.getX() > x && e.getX() < x+75 && e.getY()>y && e.getY()<y+75 && cg.getBoard()[y/75][x/75]!=null && cg.getBoard()[y/75][x/75].getColor()==cg.WHITE && selected.equals(cg.getBoard()[y/75][x/75])==false)
-					{
-						selected = cg.getBoard()[y/75][x/75];
-						System.out.println("Color:"+ selected.getColor()+" Piece:"+selected.getType());
+    	if(cg.getStatus()==cg.PLAYING) {
+			if (cg.getTurn() == cg.WHITE) {
+				for (int y = 0; y < 600; y += 75) {
+					for (int x = 0; x < 600; x += 75) {
+						if (selected == null && e.getX() > x && e.getX() < x + 75 && e.getY() > y && e.getY() < y + 75 && cg.getBoard()[y / 75][x / 75] != null && cg.getBoard()[y / 75][x / 75].getColor() == cg.WHITE) {
+							selected = cg.getBoard()[y / 75][x / 75];
+							System.out.println("Color:" + selected.getColor() + " Piece:" + selected.getType());
 
-					}
-    				else if (selected != null && e.getX() > x && e.getX() < x+75 && e.getY()>y && e.getY()<y+75 && cg.getBoard()[y/75][x/75]!=null && cg.getBoard()[y/75][x/75].equals(selected)) 
-    	    		{
-    	                selected = null;
-    	                System.out.println("Unselected");
-    	            }
-    				else if (selected != null && e.getX() > x && e.getX() < x+75 && e.getY()>y && e.getY()<y+75 && (cg.getBoard()[y/75][x/75]==null || cg.getBoard()[y/75][x/75].getColor()!=selected.getColor()) && isValidMove(selected.getRow(),selected.getCol(),y/75,x/75,selected)==true)
-    	    		{
-    					cg.movePiece(selected.getRow(),selected.getCol(),y/75,x/75, selected);
-    	                selected = null;
-    	                cg.setTurn(cg.BLACK);
-    	                System.out.println("Successful Move White Player");
-    	                cg.printBoard();
-						boolean inCheckmate = inCheckmate(cg.BLACK);
-						if(inCheckmate==true)
-							System.out.println("CHECKMATEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE");
+							boolean[][] arr = selected.getAvailableMoves(cg.getBoard());
 
+							for (int z = 0; z < 8; z++) {
+								for (int c = 0; c < 8; c++) {
+									System.out.print(arr[z][c]);
+								}
+								System.out.print("\n");
+							}
+						} else if (selected != null && e.getX() > x && e.getX() < x + 75 && e.getY() > y && e.getY() < y + 75 && cg.getBoard()[y / 75][x / 75] != null && cg.getBoard()[y / 75][x / 75].getColor() == cg.WHITE && selected.equals(cg.getBoard()[y / 75][x / 75]) == false) {
+							selected = cg.getBoard()[y / 75][x / 75];
+							System.out.println("Color:" + selected.getColor() + " Piece:" + selected.getType());
+
+						} else if (selected != null && e.getX() > x && e.getX() < x + 75 && e.getY() > y && e.getY() < y + 75 && cg.getBoard()[y / 75][x / 75] != null && cg.getBoard()[y / 75][x / 75].equals(selected)) {
+							selected = null;
+							System.out.println("Unselected");
+						} else if (selected != null && e.getX() > x && e.getX() < x + 75 && e.getY() > y && e.getY() < y + 75 && (cg.getBoard()[y / 75][x / 75] == null || cg.getBoard()[y / 75][x / 75].getColor() != selected.getColor()) && isValidMove(selected.getRow(), selected.getCol(), y / 75, x / 75, selected) == true) {
+							cg.movePiece(selected.getRow(), selected.getCol(), y / 75, x / 75, selected);
+							selected = null;
+							cg.setTurn(cg.BLACK);
+							System.out.println("Successful Move White Player");
+							cg.printBoard();
+							boolean inCheckmate = inCheckmate(cg.BLACK);
+							if (inCheckmate == true) {
+								cg.setStatus(cg.WHITE_WINS);
+								System.out.println("CHECKMATEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE");
+							}
+
+						}
 					}
-    			}
-    		}
-    	}
-    	else if(cg.getTurn() == cg.BLACK)
-    	{
-    		for(int y=0;y<600;y+=75)
-    		{
-    			for(int x=0;x<600;x+=75)
-    			{
-    				if (selected == null && e.getX() > x && e.getX() < x+75 && e.getY()>y && e.getY()<y+75 && cg.getBoard()[y/75][x/75]!=null && cg.getBoard()[y/75][x/75].getColor()==cg.BLACK) 
-    	    		{
-    	                selected = cg.getBoard()[y/75][x/75];
-    	                System.out.println("Color:"+ selected.getColor()+" Piece:"+selected.getType());
-    	            }
-					else if (selected != null && e.getX() > x && e.getX() < x+75 && e.getY()>y && e.getY()<y+75 && cg.getBoard()[y/75][x/75]!=null && cg.getBoard()[y/75][x/75].getColor()==cg.BLACK&& selected.equals(cg.getBoard()[y/75][x/75])==false)
-					{
-						selected = cg.getBoard()[y/75][x/75];
-						System.out.println("Color:"+ selected.getColor()+" Piece:"+selected.getType());
+				}
+			} else if (cg.getTurn() == cg.BLACK) {
+				for (int y = 0; y < 600; y += 75) {
+					for (int x = 0; x < 600; x += 75) {
+						if (selected == null && e.getX() > x && e.getX() < x + 75 && e.getY() > y && e.getY() < y + 75 && cg.getBoard()[y / 75][x / 75] != null && cg.getBoard()[y / 75][x / 75].getColor() == cg.BLACK) {
+							selected = cg.getBoard()[y / 75][x / 75];
+							System.out.println("Color:" + selected.getColor() + " Piece:" + selected.getType());
+						} else if (selected != null && e.getX() > x && e.getX() < x + 75 && e.getY() > y && e.getY() < y + 75 && cg.getBoard()[y / 75][x / 75] != null && cg.getBoard()[y / 75][x / 75].getColor() == cg.BLACK && selected.equals(cg.getBoard()[y / 75][x / 75]) == false) {
+							selected = cg.getBoard()[y / 75][x / 75];
+							System.out.println("Color:" + selected.getColor() + " Piece:" + selected.getType());
+						} else if (selected != null && e.getX() > x && e.getX() < x + 75 && e.getY() > y && e.getY() < y + 75 && cg.getBoard()[y / 75][x / 75] != null && cg.getBoard()[y / 75][x / 75].equals(selected)) {
+							selected = null;
+							System.out.println("Unselected");
+						} else if (selected != null && e.getX() > x && e.getX() < x + 75 && e.getY() > y && e.getY() < y + 75 && (cg.getBoard()[y / 75][x / 75] == null || cg.getBoard()[y / 75][x / 75].getColor() != selected.getColor()) && isValidMove(selected.getRow(), selected.getCol(), y / 75, x / 75, selected) == true) {
+							cg.movePiece(selected.getRow(), selected.getCol(), y / 75, x / 75, selected);
+							cg.setTurn(cg.WHITE);
+							selected = null;
+							System.out.println("Successful Move Black Player");
+							cg.printBoard();
+							boolean inCheckmate = inCheckmate(cg.WHITE);
+							if (inCheckmate == true) {
+								cg.setStatus(cg.BLACK_WINS);
+								System.out.println("CHECKMATEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE");
+							}
+						}
 					}
-    				else if (selected != null && e.getX() > x && e.getX() < x+75 && e.getY()>y && e.getY()<y+75 && cg.getBoard()[y/75][x/75]!=null && cg.getBoard()[y/75][x/75].equals(selected)) 
-    	    		{
-    	                selected = null;
-    	                System.out.println("Unselected");
-    	            }
-    				else if (selected != null && e.getX() > x && e.getX() < x+75 && e.getY()>y && e.getY()<y+75 && (cg.getBoard()[y/75][x/75]==null || cg.getBoard()[y/75][x/75].getColor()!=selected.getColor())&& isValidMove(selected.getRow(),selected.getCol(),y/75,x/75,selected)==true)
-    	    		{
-    					cg.movePiece(selected.getRow(),selected.getCol(),y/75,x/75,selected);
-    	                cg.setTurn(cg.WHITE);
-    	                selected=null;
-    	                System.out.println("Successful Move Black Player");
-    	                cg.printBoard();
-    	                boolean inCheckmate = inCheckmate(cg.WHITE);
-    	                if(inCheckmate==true)
-    	                	System.out.println("CHECKMATEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE");
-    	            }				
-    			}
-    		}
-    	}
-    	
-    	
-        repaint();
+				}
+			}
+			repaint();
+		}
     }
  
     public void mousePressed(MouseEvent e) {
@@ -365,8 +338,80 @@ public class ChessPanel extends JPanel implements MouseListener, KeyListener
  
     }
  
-    public void keyReleased(KeyEvent e) {
- 
+    public void keyReleased(KeyEvent e)
+	{
+		if(cg.getStatus()==cg.BLACK_WINS || cg.getStatus()==cg.WHITE_WINS)
+		{
+			if (e.getKeyChar() == 'r')
+			{
+				cg.reset();
+				repaint();
+			}
+		}
+		else if(cg.getStatus()==cg.TRANSFORMATION_WHITE)
+		{
+
+			for(int x=0;x<cg.getPieces().size();x++)
+			{
+				if(cg.getPieces().get(x).getType()==1 && cg.getPieces().get(x).getRow()==7)
+				{
+					Piece p = cg.getPieces().remove(x);
+					if(e.getKeyChar()=='q')
+					{
+						cg.getPieces().add(new Queen(p.getRow(), p.getCol(), p.getColor(), true, 5, true));
+						cg.setStatus(cg.PLAYING);
+					}
+					if(e.getKeyChar()=='r') {
+						cg.getPieces().add(new Rook(p.getRow(), p.getCol(), p.getColor(), true, 2, true));
+						cg.setStatus(cg.PLAYING);
+
+					}
+					if(e.getKeyChar()=='b') {
+						cg.getPieces().add(new Bishop(p.getRow(), p.getCol(), p.getColor(), true, 4, true));
+						cg.setStatus(cg.PLAYING);
+
+					}
+					if(e.getKeyChar()=='k') {
+						cg.getPieces().add(new Knight(p.getRow(), p.getCol(), p.getColor(), true, 3, true));
+						cg.setStatus(cg.PLAYING);
+
+					}
+				}
+			}
+			cg.updateBoard();
+		}
+		else if(cg.getStatus()==cg.TRANSFORMATION_BLACK)
+		{
+
+			for(int x=0;x<cg.getPieces().size();x++)
+			{
+				if(cg.getPieces().get(x).getType()==1 && cg.getPieces().get(x).getRow()==0)
+				{
+					Piece p = cg.getPieces().remove(x);
+					if(e.getKeyChar()=='q') {
+						cg.getPieces().add(new Queen(p.getRow(), p.getCol(), p.getColor(), true, 5, true));
+						cg.setStatus(cg.PLAYING);
+					}
+					if(e.getKeyChar()=='r') {
+						cg.getPieces().add(new Rook(p.getRow(), p.getCol(), p.getColor(), true, 2, true));
+						cg.setStatus(cg.PLAYING);
+
+					}
+					if(e.getKeyChar()=='b') {
+						cg.getPieces().add(new Bishop(p.getRow(), p.getCol(), p.getColor(), true, 4, true));
+						cg.setStatus(cg.PLAYING);
+
+					}
+					if(e.getKeyChar()=='k') {
+						cg.getPieces().add(new Knight(p.getRow(), p.getCol(), p.getColor(), true, 3, true));
+						cg.setStatus(cg.PLAYING);
+
+					}
+				}
+			}
+			cg.updateBoard();
+		}
+		repaint();
     }
  
     public void addNotify()

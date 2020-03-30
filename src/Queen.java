@@ -21,6 +21,8 @@ public class Queen extends Piece
 
 	}
 
+
+
 	public int getType()
 	{
 		return type;

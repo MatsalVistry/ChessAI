@@ -113,6 +113,7 @@ public class ChessPanel extends JPanel implements MouseListener, KeyListener
     }
     public void paint(Graphics g)
     {
+        updateStatus();
     	int xOffset = 100;
     	//if selected is true, print spheres on allowed locations
     	Color lightBrown = new Color(178, 113, 33);
@@ -213,12 +214,7 @@ public class ChessPanel extends JPanel implements MouseListener, KeyListener
         				g.setColor(Color.BLUE);
         				g.fillOval(y*75+25+xOffset, x*75+25, 30, 30);
         			}
-        			if(inCheck(cg.WHITE)==false && inCheck(cg.BLACK)==false)
-        			    cg.getMessages().remove("Check");
-        			if(selected.getType()==1 && selected.getColor()==cg.BLACK && selected.getRow()!=0)
-                        cg.getMessages().remove("press q for queen, r for rook, b for bishop, and k for knight");
-                    if(selected.getType()==1 && selected.getColor()==cg.WHITE && selected.getRow()!=7)
-                        cg.getMessages().remove("press q for queen, r for rook, b for bishop, and k for knight");
+
 
                 }
         	}
@@ -233,6 +229,11 @@ public class ChessPanel extends JPanel implements MouseListener, KeyListener
 		Font trb = new Font("TimesRoman", Font.BOLD, 18);
 		g.setFont(trb);
 		g.setColor(Color.BLUE);
+
+
+
+
+
 
 		for(int x=1;x<cg.getMessages().size()+1;x++)
 		{
@@ -268,6 +269,79 @@ public class ChessPanel extends JPanel implements MouseListener, KeyListener
 				g.drawImage(SmallBlackQueen,600+xOffset+25,45*x,null);
 		}
     }
+    public void updateStatus()
+    {
+        cg.updateBoard();
+        for(int x=0;x<cg.getPieces().size();x++)
+        {
+            Piece p = cg.getPieces().get(x);
+            if(p.getColor()==cg.WHITE && p.getRow()==7 && p.getType()==1) {
+                System.out.println("PPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPP");
+                cg.setStatus(cg.TRANSFORMATION_WHITE);
+            }
+            if(p.getColor()==cg.BLACK && p.getRow()==0 && p.getType()==1)
+                cg.setStatus(cg.TRANSFORMATION_BLACK);
+        }
+
+        cg.getMessages().clear();
+        if(cg.getPlayerAmount()==0)
+            cg.getMessages().add("Press 1 for single player and 2 for multiplayer");
+        if(cg.getTurn()==ChessGame.WHITE)
+            cg.getMessages().add("White's Turn");
+        if(cg.getTurn()==ChessGame.BLACK)
+            cg.getMessages().add("Black's Turn");
+//        if(inCheckmate(cg.WHITE) && cg.getTurn()==cg.WHITE)
+//        {
+//            cg.setStatus(cg.BLACK_WINS);
+//            cg.getMessages().clear();
+//            cg.getMessages().add("Black Wins!");
+//            cg.getMessages().add("Press r to reset");
+//        }
+//        else if(inCheckmate(cg.BLACK) && cg.getTurn()==cg.BLACK)
+//        {
+//            cg.setStatus(cg.WHITE_WINS);
+//            cg.getMessages().clear();
+//            cg.getMessages().add("White Wins!");
+//            cg.getMessages().add("Press r to reset");
+//        }
+//        else if(inStalemate(cg.WHITE) && cg.getTurn()==cg.WHITE)
+//        {
+//            cg.setStatus(cg.STALEMATE);
+//            cg.getMessages().clear();
+//            cg.getMessages().add("Stalemate");
+//            cg.getMessages().add("Press r to reset");
+//        }
+//        else if(inStalemate(cg.BLACK) && cg.getTurn()==cg.BLACK)
+//        {
+//            cg.setStatus(cg.STALEMATE);
+//            cg.getMessages().clear();
+//            cg.getMessages().add("Stalemate");
+//            cg.getMessages().add("Press r to reset");
+//        }
+
+        else if(inCheck(cg.WHITE))
+        {
+    //        System.out.println("SSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSS");
+            cg.getMessages().clear();
+            cg.getMessages().add("White's Turn!");
+            cg.getMessages().add("Check");
+        }
+        else if(inCheck(cg.BLACK))
+        {
+      //      System.out.println("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA");
+
+            cg.getMessages().clear();
+            cg.getMessages().add("Black's Turn!");
+            cg.getMessages().add("Check");
+        }
+        if(cg.getStatus()==cg.TRANSFORMATION_BLACK || cg.getStatus()==cg.TRANSFORMATION_WHITE)
+        {
+            System.out.println("LLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLL");
+            cg.getMessages().add("press q for queen, r for rook, b for bishop, and k for knight");
+        }
+     //   repaint();
+
+    }
     public boolean isValidMove(int oldr, int oldc, int r, int c, Piece p)
     {
     	boolean [][] arr = p.getAvailableMoves(cg.getBoard());
@@ -285,7 +359,6 @@ public class ChessPanel extends JPanel implements MouseListener, KeyListener
     }
     public boolean inCheck(int color)
     {
-    	// get available moves of all pieces of opposite color
     	for(int x=0; x<cg.getPieces().size();x++)
     	{
     		if(cg.getPieces().get(x).getColor()!=color)
@@ -299,16 +372,12 @@ public class ChessPanel extends JPanel implements MouseListener, KeyListener
 
     					if(arr[y][z]==true && cg.getBoard()[y][z]!=null && cg.getBoard()[y][z].getType()==6 && cg.getBoard()[y][z].getColor()==color)
     					{
-    	//					System.out.print("SFHAIUSHFBGYUIASBGYUFBGDUAYSFBYUSDBGYUFBGSEDUFYBUYSDFBGYUBGSDFUYG");
-    						if(cg.getMessages().contains("Check")==false)
-								cg.getMessages().add("Check");
 							return true;
     					}
     				}
     			}
     		}
     	}
-    	cg.getMessages().remove("Check");
     	return false;
     }
     public boolean inCheckmate(int color)
@@ -339,6 +408,34 @@ public class ChessPanel extends JPanel implements MouseListener, KeyListener
 		}
 		return true;
 	}
+    public boolean inStalemate(int color)
+    {
+        if(inCheck(color)==true)
+            return false;
+        else
+        {
+            for(int s=0;s<cg.getPieces().size();s++)
+            {
+                if(cg.getPieces().get(s).getColor()==color)
+                {
+                    boolean [][] arr = cg.getPieces().get(s).getAvailableMoves(cg.getBoard());
+
+                    for(int x=0;x<arr.length;x++)
+                    {
+                        for(int y=0;y<arr[0].length;y++)
+                        {
+                            if(arr[x][y]==true)
+                            {
+                                if(isValidMove(cg.getPieces().get(s).getRow(), cg.getPieces().get(s).getCol(), x,y,cg.getPieces().get(s))==true)
+                                    return false;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        return true;
+    }
 	public void randomAIMove()
     {
         ArrayList<Piece> blackPieces = new ArrayList<>();
@@ -364,8 +461,7 @@ public class ChessPanel extends JPanel implements MouseListener, KeyListener
                     {
                         moves.add(new MoveRandom(p,xx,y));
                     }
-                    if(inCheck(cg.WHITE)==false && inCheck(cg.BLACK)==false)
-                        cg.getMessages().remove("Check");
+
                 }
             }
         }
@@ -377,19 +473,10 @@ public class ChessPanel extends JPanel implements MouseListener, KeyListener
             {
                 cg.movePiece(cg.getPieces().get(x).getRow(),cg.getPieces().get(x).getCol(),moves.get(loc).getR(),moves.get(loc).getC(),cg.getPieces().get(x));
                 cg.setTurn(cg.WHITE);
-                cg.getMessages().remove("Black's Turn");
-                cg.getMessages().add("White's Turn");
                 selected = null;
-    //            cg.printBoard();
+                updateStatus();
 
-                boolean inCheckmate = inCheckmate(cg.WHITE);
-                if (inCheckmate == true) {
-                    cg.getMessages().clear();
-                    cg.setStatus(cg.BLACK_WINS);
-                    cg.getMessages().set(0, "Black Wins");
-     //               System.out.println("CHECKMATEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE");
-                    cg.getMessages().add("Press r to reset");
-                }
+
             }
         }
         if(cg.getStatus()==cg.TRANSFORMATION_BLACK)
@@ -403,10 +490,9 @@ public class ChessPanel extends JPanel implements MouseListener, KeyListener
 
                     cg.getPieces().add(new Queen(p.getRow(), p.getCol(), p.getColor(), true, 5, true));
                     cg.setStatus(cg.PLAYING);
-                    cg.getMessages().remove("press q for queen, r for rook, b for bishop, and k for knight");
                 }
             }
-            cg.updateBoard();
+            updateStatus();
             repaint();
         }
 
@@ -415,8 +501,7 @@ public class ChessPanel extends JPanel implements MouseListener, KeyListener
     {
         ArrayList<Piece> blackPieces = new ArrayList<>();
         ArrayList<MoveWeight> moves = new ArrayList<>();
-        cg.updateBoard();
-        cg.printBoard();
+
 
         MoveWeight bestMove = null;
         for(int x=0;x<cg.getPieces().size();x++)
@@ -467,36 +552,25 @@ public class ChessPanel extends JPanel implements MouseListener, KeyListener
                             }
                         }
                     }
-                    if(inCheck(cg.WHITE)==false && inCheck(cg.BLACK)==false)
-                        cg.getMessages().remove("Check");
                 }
             }
         }
-        System.out.println(bestMove.getP().getRow()+"                                          "+bestMove.getP().getCol()+"                     "+bestMove.getWeight());
+   //     System.out.println(bestMove.getP().getRow()+"                                          "+bestMove.getP().getCol()+"                     "+bestMove.getWeight());
 
 
-        if(bestMove.getWeight()==0) {
+        if(bestMove==null || bestMove.getWeight()==0) {
             System.out.println("PPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPP");
             randomAIMove();
         }
         else {
             for (int x = 0; x < cg.getPieces().size(); x++) {
-                if (cg.getPieces().get(x).equals(bestMove.getP())) {
+                if (cg.getPieces().get(x).equals(bestMove.getP()))
+                {
                     cg.movePiece(cg.getPieces().get(x).getRow(), cg.getPieces().get(x).getCol(), bestMove.getR(), bestMove.getC(), cg.getPieces().get(x));
                     cg.setTurn(cg.WHITE);
-                    cg.getMessages().remove("Black's Turn");
-                    cg.getMessages().add("White's Turn");
                     selected = null;
-        //            cg.printBoard();
+                    updateStatus();
 
-                    boolean inCheckmate = inCheckmate(cg.WHITE);
-                    if (inCheckmate == true) {
-                        cg.getMessages().clear();
-                        cg.setStatus(cg.BLACK_WINS);
-                        cg.getMessages().set(0, "Black Wins");
-        //                System.out.println("CHECKMATEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE");
-                        cg.getMessages().add("Press r to reset");
-                    }
                 }
             }
         }
@@ -508,18 +582,14 @@ public class ChessPanel extends JPanel implements MouseListener, KeyListener
                 {
                     Piece p = cg.getPieces().remove(x);
 
-
                     cg.getPieces().add(new Queen(p.getRow(), p.getCol(), p.getColor(), true, 5, true));
                     cg.setStatus(cg.PLAYING);
-                    cg.getMessages().remove("press q for queen, r for rook, b for bishop, and k for knight");
+
                 }
             }
-            cg.updateBoard();
+            updateStatus();
             repaint();
         }
-
-
-
 
     }
  
@@ -528,100 +598,219 @@ public class ChessPanel extends JPanel implements MouseListener, KeyListener
     	inCheck(cg.WHITE);
     	inCheck(cg.BLACK);
     	int xOffset = 100;
-    	if(cg.getStatus()==cg.PLAYING && cg.getPlayerAmount()!=0) {
-			if (cg.getTurn() == cg.WHITE) {
-				for (int y = 0; y < 600; y += 75) {
-					for (int x = 0+xOffset; x < 600+xOffset; x += 75) {
-						if (selected == null && e.getX() > x && e.getX() < x + 75 && e.getY() > y && e.getY() < y + 75 && cg.getBoard()[y / 75][(x-xOffset) / 75] != null && cg.getBoard()[y / 75][(x-xOffset) / 75].getColor() == cg.WHITE) {
+    	updateStatus();
+    	if(cg.getStatus()==cg.PLAYING && cg.getPlayerAmount()!=0)
+    	{
+			if (cg.getTurn() == cg.WHITE)
+			{
+				for (int y = 0; y < 600; y += 75)
+				{
+					for (int x = 0+xOffset; x < 600+xOffset; x += 75)
+					{
+						if (selected == null && e.getX() > x && e.getX() < x + 75 && e.getY() > y && e.getY() < y + 75 && cg.getBoard()[y / 75][(x-xOffset) / 75] != null && cg.getBoard()[y / 75][(x-xOffset) / 75].getColor() == cg.WHITE)
+						{
 							selected = cg.getBoard()[y / 75][(x-xOffset) / 75];
-			//				System.out.println("Color:" + selected.getColor() + " Piece:" + selected.getType());
-
-							boolean[][] arr = selected.getAvailableMoves(cg.getBoard());
-
-//							for (int z = 0; z < 8; z++) {
-//								for (int c = 0; c < 8; c++) {
-//									System.out.print(arr[z][c]);
-//								}
-//								System.out.print("\n");
-//							}
-						} else if (selected != null && e.getX() > x && e.getX() < x + 75 && e.getY() > y && e.getY() < y + 75 && cg.getBoard()[y / 75][(x-xOffset) / 75] != null && cg.getBoard()[y / 75][(x-xOffset) / 75].getColor() == cg.WHITE && selected.equals(cg.getBoard()[y / 75][(x-xOffset) / 75]) == false) {
+                            updateStatus();
+						}
+						else if (selected != null && e.getX() > x && e.getX() < x + 75 && e.getY() > y && e.getY() < y + 75 && cg.getBoard()[y / 75][(x-xOffset) / 75] != null && cg.getBoard()[y / 75][(x-xOffset) / 75].getColor() == cg.WHITE && selected.equals(cg.getBoard()[y / 75][(x-xOffset) / 75]) == false)
+						{
 							selected = cg.getBoard()[y / 75][(x-xOffset) / 75];
-		//					System.out.println("Color:" + selected.getColor() + " Piece:" + selected.getType());
-
-						} else if (selected != null && e.getX() > x && e.getX() < x + 75 && e.getY() > y && e.getY() < y + 75 && cg.getBoard()[y / 75][(x-xOffset) / 75] != null && cg.getBoard()[y / 75][(x-xOffset) / 75].equals(selected)) {
+                            updateStatus();
+						}
+						else if (selected != null && e.getX() > x && e.getX() < x + 75 && e.getY() > y && e.getY() < y + 75 && cg.getBoard()[y / 75][(x-xOffset) / 75] != null && cg.getBoard()[y / 75][(x-xOffset) / 75].equals(selected))
+						{
 							selected = null;
-		//					System.out.println("Unselected");
-						} else if (selected != null && e.getX() > x && e.getX() < x + 75 && e.getY() > y && e.getY() < y + 75 && (cg.getBoard()[y / 75][(x-xOffset) / 75] == null || cg.getBoard()[y / 75][(x-xOffset) / 75].getColor() != selected.getColor()) && isValidMove(selected.getRow(), selected.getCol(), y / 75, (x-xOffset) / 75, selected) == true) {
-							cg.movePiece(selected.getRow(), selected.getCol(), y / 75, (x-xOffset) / 75, selected);
+                            updateStatus();
+						}
+						else if (selected != null && e.getX() > x && e.getX() < x + 75 && e.getY() > y && e.getY() < y + 75 && (cg.getBoard()[y / 75][(x-xOffset) / 75] == null || cg.getBoard()[y / 75][(x-xOffset) / 75].getColor() != selected.getColor()) && isValidMove(selected.getRow(), selected.getCol(), y / 75, (x-xOffset) / 75, selected) == true)
+						{
+
+//                            if(selected.getType()==6 && selected.getRow()==0&& (x-xOffset) / 75-selected.getCol()==2 && selected.getColor()==cg.WHITE)
+//                            {
+//                                for(int xx=0;xx<cg.getPieces().size();xx++)
+//                                {
+//                                    if(cg.getPieces().get(xx).equals(cg.getBoard()[0][7]) && cg.getPieces().get(xx).hasMoved()==false)
+//                                    {
+//                                        //              piece = new Rook(pieces.get(xx).getRow(),pieces.get(xx).getCol(),pieces.get(xx).getColor(),true, 2,false);
+//                                        cg.getPieces().get(xx).setCol(5);
+//                                        cg.getPieces().get(xx).setHasMoved(true);
+////                    p.setRow(r);
+////                    p.setCol(c);
+////                    p.setHasMoved(true);
+//                                    }
+//                                }
+//                                System.out.println("YYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYY");
+//                            }
+//                            else if(selected.getType()==6 &&  selected.getRow()==0&& (x-xOffset) / 75-selected.getCol()==-2 && selected.getColor()==cg.WHITE)
+//                            {
+//                                for(int xx=0;xx<cg.getPieces().size();xx++)
+//                                {
+//                                    if(cg.getPieces().get(xx).equals(cg.getBoard()[0][0]) && cg.getPieces().get(xx).hasMoved()==false)
+//                                    {
+//                                        //             piece = new Rook(pieces.get(xx).getRow(),pieces.get(xx).getCol(),pieces.get(xx).getColor(),true, 2,false);
+//                                        cg.getPieces().get(xx).setCol(3);
+//                                        cg.getPieces().get(xx).setHasMoved(true);
+////                    p.setRow(r);
+////                    p.setCol(c);
+////                    p.setHasMoved(true);
+//                                    }
+//                                }
+//                                System.out.println("YYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYY");
+//                            }
+//                            else if(selected.getType()==6 && selected.getRow()==7&& (x-xOffset) / 75-selected.getCol()==2 && selected.getColor()==cg.BLACK)
+//                            {
+//                                for(int xx=0;xx<cg.getPieces().size();xx++)
+//                                {
+//                                    if(cg.getPieces().get(xx).equals(cg.getBoard()[7][7]) && cg.getPieces().get(xx).hasMoved()==false)
+//                                    {
+//                                        //              piece = new Rook(pieces.get(xx).getRow(),pieces.get(xx).getCol(),pieces.get(xx).getColor(),true, 2,false);
+//                                        cg.getPieces().get(xx).setCol(4);
+//                                        cg.getPieces().get(xx).setHasMoved(true);
+////                    p.setRow(r);
+////                    p.setCol(c);
+////                    p.setHasMoved(true);
+//                                    }
+//                                }
+//                                System.out.println("YYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYY");
+//                            }
+//                            else if(selected.getType()==6 &&  selected.getRow()==7&& (x-xOffset) / 75-selected.getCol()==-2 && selected.getColor()==cg.BLACK)
+//                            {
+//                                for(int xx=0;xx<cg.getPieces().size();xx++)
+//                                {
+//                                    if(cg.getPieces().get(xx).equals(cg.getBoard()[7][0]) && cg.getPieces().get(xx).hasMoved()==false)
+//                                    {
+//                                        //              piece = new Rook(pieces.get(xx).getRow(),pieces.get(xx).getCol(),pieces.get(xx).getColor(),true, 2,false);
+//                                        cg.getPieces().get(xx).setCol(2);
+//                                        cg.getPieces().get(xx).setHasMoved(true);
+////                    p.setRow(r);
+////                    p.setCol(c);
+////                    p.setHasMoved(true);
+//                                    }
+//                                }
+//                                System.out.println("YYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYY");
+//                            }
+//
+
+                            cg.movePiece(selected.getRow(), selected.getCol(), y / 75, (x-xOffset) / 75, selected);
+
+
 							selected = null;
 							cg.setTurn(cg.BLACK);
-							cg.getMessages().remove("White's Turn");
-							cg.getMessages().add("Black's Turn");
-			//				System.out.println("Successful Move White Player");
-			//				cg.printBoard();
-
-							boolean inCheckmate = inCheckmate(cg.BLACK);
-							if (inCheckmate == true) {
-								cg.getMessages().clear();
-								cg.setStatus(cg.WHITE_WINS);
-								cg.getMessages().add("White Wins!");
-		//						System.out.println("CHECKMATEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE");
-								cg.getMessages().add("Press r to reset");
-							}
-
+							updateStatus();
 						}
 					}
 				}
 			}
 			if (cg.getTurn() == cg.BLACK)
 			{
-			    if(cg.getPlayerAmount()==cg.TWO_PLAYER) {
-                    for (int y = 0; y < 600; y += 75) {
-                        for (int x = 0 + xOffset; x < 600 + xOffset; x += 75) {
-                            if (selected == null && e.getX() > x && e.getX() < x + 75 && e.getY() > y && e.getY() < y + 75 && cg.getBoard()[y / 75][(x - xOffset) / 75] != null && cg.getBoard()[y / 75][(x - xOffset) / 75].getColor() == cg.BLACK) {
+			    if(cg.getPlayerAmount()==cg.TWO_PLAYER)
+			    {
+                    for (int y = 0; y < 600; y += 75)
+                    {
+                        for (int x = 0 + xOffset; x < 600 + xOffset; x += 75)
+                        {
+                            if (selected == null && e.getX() > x && e.getX() < x + 75 && e.getY() > y && e.getY() < y + 75 && cg.getBoard()[y / 75][(x - xOffset) / 75] != null && cg.getBoard()[y / 75][(x - xOffset) / 75].getColor() == cg.BLACK)
+                            {
                                 selected = cg.getBoard()[y / 75][(x - xOffset) / 75];
-          //                      System.out.println("Color:" + selected.getColor() + " Piece:" + selected.getType());
-                            } else if (selected != null && e.getX() > x && e.getX() < x + 75 && e.getY() > y && e.getY() < y + 75 && cg.getBoard()[y / 75][(x - xOffset) / 75] != null && cg.getBoard()[y / 75][(x - xOffset) / 75].getColor() == cg.BLACK && selected.equals(cg.getBoard()[y / 75][(x - xOffset) / 75]) == false) {
+                                updateStatus();
+                            }
+                            else if (selected != null && e.getX() > x && e.getX() < x + 75 && e.getY() > y && e.getY() < y + 75 && cg.getBoard()[y / 75][(x - xOffset) / 75] != null && cg.getBoard()[y / 75][(x - xOffset) / 75].getColor() == cg.BLACK && selected.equals(cg.getBoard()[y / 75][(x - xOffset) / 75]) == false)
+                            {
                                 selected = cg.getBoard()[y / 75][(x - xOffset) / 75];
-          //                      System.out.println("Color:" + selected.getColor() + " Piece:" + selected.getType());
-                            } else if (selected != null && e.getX() > x && e.getX() < x + 75 && e.getY() > y && e.getY() < y + 75 && cg.getBoard()[y / 75][(x - xOffset) / 75] != null && cg.getBoard()[y / 75][(x - xOffset) / 75].equals(selected)) {
+                                updateStatus();
+                            }
+                            else if (selected != null && e.getX() > x && e.getX() < x + 75 && e.getY() > y && e.getY() < y + 75 && cg.getBoard()[y / 75][(x - xOffset) / 75] != null && cg.getBoard()[y / 75][(x - xOffset) / 75].equals(selected)) {
                                 selected = null;
-          //                      System.out.println("Unselected");
-                            } else if (selected != null && e.getX() > x && e.getX() < x + 75 && e.getY() > y && e.getY() < y + 75 && (cg.getBoard()[y / 75][(x - xOffset) / 75] == null || cg.getBoard()[y / 75][(x - xOffset) / 75].getColor() != selected.getColor()) && isValidMove(selected.getRow(), selected.getCol(), y / 75, (x - xOffset) / 75, selected) == true) {
+                                updateStatus();
+                            }
+                            else if (selected != null && e.getX() > x && e.getX() < x + 75 && e.getY() > y && e.getY() < y + 75 && (cg.getBoard()[y / 75][(x - xOffset) / 75] == null || cg.getBoard()[y / 75][(x - xOffset) / 75].getColor() != selected.getColor()) && isValidMove(selected.getRow(), selected.getCol(), y / 75, (x - xOffset) / 75, selected) == true) {
+//                                if(selected.getType()==6 && selected.getRow()==0&& (x-xOffset) / 75-selected.getCol()==2 && selected.getColor()==cg.WHITE)
+//                                {
+//                                    for(int xx=0;xx<cg.getPieces().size();xx++)
+//                                    {
+//                                        if(cg.getPieces().get(xx).equals(cg.getBoard()[0][7]) && cg.getPieces().get(xx).hasMoved()==false)
+//                                        {
+//                                            //              piece = new Rook(pieces.get(xx).getRow(),pieces.get(xx).getCol(),pieces.get(xx).getColor(),true, 2,false);
+//                                            cg.getPieces().get(xx).setCol(5);
+//                                            cg.getPieces().get(xx).setHasMoved(true);
+////                    p.setRow(r);
+////                    p.setCol(c);
+////                    p.setHasMoved(true);
+//                                        }
+//                                    }
+//                                    System.out.println("YYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYY");
+//                                }
+//                                else if(selected.getType()==6 &&  selected.getRow()==0&& (x-xOffset) / 75-selected.getCol()==-2 && selected.getColor()==cg.WHITE)
+//                                {
+//                                    for(int xx=0;xx<cg.getPieces().size();xx++)
+//                                    {
+//                                        if(cg.getPieces().get(xx).equals(cg.getBoard()[0][0]) && cg.getPieces().get(xx).hasMoved()==false)
+//                                        {
+//                                            //             piece = new Rook(pieces.get(xx).getRow(),pieces.get(xx).getCol(),pieces.get(xx).getColor(),true, 2,false);
+//                                            cg.getPieces().get(xx).setCol(3);
+//                                            cg.getPieces().get(xx).setHasMoved(true);
+////                    p.setRow(r);
+////                    p.setCol(c);
+////                    p.setHasMoved(true);
+//                                        }
+//                                    }
+//                                    System.out.println("YYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYY");
+//                                }
+//                                else if(selected.getType()==6 && selected.getRow()==7&& (x-xOffset) / 75-selected.getCol()==2 && selected.getColor()==cg.BLACK)
+//                                {
+//                                    for(int xx=0;xx<cg.getPieces().size();xx++)
+//                                    {
+//                                        if(cg.getPieces().get(xx).equals(cg.getBoard()[7][7]) && cg.getPieces().get(xx).hasMoved()==false)
+//                                        {
+//                                            //              piece = new Rook(pieces.get(xx).getRow(),pieces.get(xx).getCol(),pieces.get(xx).getColor(),true, 2,false);
+//                                            cg.getPieces().get(xx).setCol(4);
+//                                            cg.getPieces().get(xx).setHasMoved(true);
+////                    p.setRow(r);
+////                    p.setCol(c);
+////                    p.setHasMoved(true);
+//                                        }
+//                                    }
+//                                    System.out.println("YYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYY");
+//                                }
+//                                else if(selected.getType()==6 &&  selected.getRow()==7&& (x-xOffset) / 75-selected.getCol()==-2 && selected.getColor()==cg.BLACK)
+//                                {
+//                                    for(int xx=0;xx<cg.getPieces().size();xx++)
+//                                    {
+//                                        if(cg.getPieces().get(xx).equals(cg.getBoard()[7][0]) && cg.getPieces().get(xx).hasMoved()==false)
+//                                        {
+//                                            //              piece = new Rook(pieces.get(xx).getRow(),pieces.get(xx).getCol(),pieces.get(xx).getColor(),true, 2,false);
+//                                            cg.getPieces().get(xx).setCol(2);
+//                                            cg.getPieces().get(xx).setHasMoved(true);
+////                    p.setRow(r);
+////                    p.setCol(c);
+////                    p.setHasMoved(true);
+//                                        }
+//                                    }
+//                                    System.out.println("YYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYY");
+//                                }
                                 cg.movePiece(selected.getRow(), selected.getCol(), y / 75, (x - xOffset) / 75, selected);
-                                cg.setTurn(cg.WHITE);
-                                cg.getMessages().remove("Black's Turn");
-                                cg.getMessages().add("White's Turn");
-                                selected = null;
-           //                     System.out.println("Successful Move Black Player");
-             //                   cg.printBoard();
-                            //    inCheck(cg.WHITE);
 
-                                boolean inCheckmate = inCheckmate(cg.WHITE);
-                                if (inCheckmate == true) {
-                                    cg.getMessages().clear();
-                                    cg.setStatus(cg.BLACK_WINS);
-                                    cg.getMessages().add("Black Wins");
-        //                            System.out.println("CHECKMATEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE");
-                                    cg.getMessages().add("Press r to reset");
-                                }
+                                selected = null;
+                                cg.setTurn(cg.WHITE);
+                                updateStatus();
+
                             }
                         }
                     }
                 }
 			    else
                 {
-               //   randomAIMove();
+                    updateStatus();
+
+                    //   randomAIMove();
                     easyAIMove();
                 }
 			}
-			inCheck(cg.WHITE);
-            inCheck(cg.BLACK);
-			repaint();
-	//		if(cg.getStatus()!= cg.BLACK_WINS && cg.getStatus()!=cg.WHITE_WINS) {
 
-	//		}
+
 		}
+        updateStatus();
+        repaint();
     }
  
     public void mousePressed(MouseEvent e) {
@@ -651,20 +840,18 @@ public class ChessPanel extends JPanel implements MouseListener, KeyListener
  
     public void keyReleased(KeyEvent e)
 	{
+        updateStatus();
 	    if(cg.getPlayerAmount()==0)
         {
             if (e.getKeyChar() == '1')
             {
                 cg.setPlayerAmount(cg.ONE_PLAYER);
-                cg.getMessages().clear();
-                cg.getMessages().add("White's Turn");
                 repaint();
             }
             if (e.getKeyChar() == '2')
             {
                 cg.setPlayerAmount(cg.TWO_PLAYER);
-                cg.getMessages().clear();
-                cg.getMessages().add("White's Turn");
+
                 repaint();
             }
         }
@@ -690,14 +877,12 @@ public class ChessPanel extends JPanel implements MouseListener, KeyListener
                         p = cg.getPieces().remove(x);
 						cg.getPieces().add(new Queen(p.getRow(), p.getCol(), p.getColor(), true, 5, true));
 						cg.setStatus(cg.PLAYING);
-						cg.getMessages().remove("press q for queen, r for rook, b for bishop, and k for knight");
 					}
 					if(e.getKeyChar()=='r') {
                         p = cg.getPieces().remove(x);
 
                         cg.getPieces().add(new Rook(p.getRow(), p.getCol(), p.getColor(), true, 2, true));
 						cg.setStatus(cg.PLAYING);
-						cg.getMessages().remove("press q for queen, r for rook, b for bishop, and k for knight");
 
 					}
 					if(e.getKeyChar()=='b') {
@@ -705,7 +890,6 @@ public class ChessPanel extends JPanel implements MouseListener, KeyListener
 
                         cg.getPieces().add(new Bishop(p.getRow(), p.getCol(), p.getColor(), true, 4, true));
 						cg.setStatus(cg.PLAYING);
-						cg.getMessages().remove("press q for queen, r for rook, b for bishop, and k for knight");
 
 					}
 					if(e.getKeyChar()=='k') {
@@ -713,7 +897,6 @@ public class ChessPanel extends JPanel implements MouseListener, KeyListener
 
                         cg.getPieces().add(new Knight(p.getRow(), p.getCol(), p.getColor(), true, 3, true));
 						cg.setStatus(cg.PLAYING);
-						cg.getMessages().remove("press q for queen, r for rook, b for bishop, and k for knight");
 
 					}
 				}
@@ -733,7 +916,6 @@ public class ChessPanel extends JPanel implements MouseListener, KeyListener
 
                         cg.getPieces().add(new Queen(p.getRow(), p.getCol(), p.getColor(), true, 5, true));
 						cg.setStatus(cg.PLAYING);
-						cg.getMessages().remove("press q for queen, r for rook, b for bishop, and k for knight");
 
 					}
 					if(e.getKeyChar()=='r') {
@@ -741,7 +923,6 @@ public class ChessPanel extends JPanel implements MouseListener, KeyListener
 
                         cg.getPieces().add(new Rook(p.getRow(), p.getCol(), p.getColor(), true, 2, true));
 						cg.setStatus(cg.PLAYING);
-						cg.getMessages().remove("press q for queen, r for rook, b for bishop, and k for knight");
 
 					}
 					if(e.getKeyChar()=='b') {
@@ -749,7 +930,6 @@ public class ChessPanel extends JPanel implements MouseListener, KeyListener
 
                         cg.getPieces().add(new Bishop(p.getRow(), p.getCol(), p.getColor(), true, 4, true));
 						cg.setStatus(cg.PLAYING);
-						cg.getMessages().remove("press q for queen, r for rook, b for bishop, and k for knight");
 
 					}
 					if(e.getKeyChar()=='k') {
@@ -757,13 +937,13 @@ public class ChessPanel extends JPanel implements MouseListener, KeyListener
 
                         cg.getPieces().add(new Knight(p.getRow(), p.getCol(), p.getColor(), true, 3, true));
 						cg.setStatus(cg.PLAYING);
-						cg.getMessages().remove("press q for queen, r for rook, b for bishop, and k for knight");
 
 					}
 				}
 			}
 			cg.updateBoard();
 		}
+        updateStatus();
 		repaint();
     }
  

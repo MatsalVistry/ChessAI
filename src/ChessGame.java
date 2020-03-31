@@ -13,6 +13,7 @@ public class ChessGame
 	public static final int TRANSFORMATION_BLACK = 6;
     public static final int ONE_PLAYER =7;
     public static final int TWO_PLAYER =8;
+    public static final int STALEMATE =9;
 
 
 
@@ -111,6 +112,7 @@ public class ChessGame
 //        llB.addLast((ArrayList<Integer>)killedBlackPieces.clone());
 
    		Piece piece = null;
+   		updateBoard();
     	for(int x=0;x<pieces.size();x++)
     	{
     		if(pieces.get(x).getRow()==r && pieces.get(x).getCol()==c && pieces.get(x).getColor()!=p.getColor())
@@ -122,71 +124,78 @@ public class ChessGame
     				killedBlackPieces.add(piece.getType());
     		}
     	}
-    	if(p.getType()==6 && p.getRow()==0&& c-oldc==2 && p.getColor()==WHITE)
-		{
-			for(int x=0;x<pieces.size();x++)
-			{
-				if(pieces.get(x).equals(board[0][7]) && pieces.get(x).hasMoved()==false)
-				{
-					pieces.get(x).setCol(5);
-					pieces.get(x).setHasMoved(true);
-				}
-			}
-			System.out.println("YYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYY");
-		}
-		if(p.getType()==6 &&  p.getRow()==0&& c-oldc==-2 && p.getColor()==WHITE)
-		{
-			for(int x=0;x<pieces.size();x++)
-			{
-				if(pieces.get(x).equals(board[0][0]) && pieces.get(x).hasMoved()==false)
-				{
-					pieces.get(x).setCol(3);
-					pieces.get(x).setHasMoved(true);
-				}
-			}
-			System.out.println("YYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYY");
-		}
-		if(p.getType()==6 && p.getRow()==7&& c-oldc==2 && p.getColor()==BLACK)
-		{
-			for(int x=0;x<pieces.size();x++)
-			{
-				if(pieces.get(x).equals(board[7][7]) && pieces.get(x).hasMoved()==false)
-				{
-					pieces.get(x).setCol(4);
-					pieces.get(x).setHasMoved(true);
-				}
-			}
-			System.out.println("YYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYY");
-		}
-		if(p.getType()==6 &&  p.getRow()==7&& c-oldc==-2 && p.getColor()==BLACK)
-		{
-			for(int x=0;x<pieces.size();x++)
-			{
-				if(pieces.get(x).equals(board[7][0]) && pieces.get(x).hasMoved()==false)
-				{
-					pieces.get(x).setCol(2);
-					pieces.get(x).setHasMoved(true);
-				}
-			}
-			System.out.println("YYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYY");
-		}
-		if(r==0 && p.getType()==1 && p.getColor()==BLACK) {
-			if(messages.contains("press q for queen, r for rook, b for bishop, and k for knight")==false)
-				messages.add("press q for queen, r for rook, b for bishop, and k for knight");
-			status = TRANSFORMATION_BLACK;
-		}
-		if(r==7 && p.getType()==1 && p.getColor()==WHITE) {
-			if(messages.contains("press q for queen, r for rook, b for bishop, and k for knight")==false)
-				messages.add("press q for queen, r for rook, b for bishop, and k for knight");
-			status = TRANSFORMATION_WHITE;
-		}
+//    	if(p.getType()==6 && p.getRow()==0&& c-oldc==2 && p.getColor()==WHITE)
+//		{
+//			for(int x=0;x<pieces.size();x++)
+//			{
+//				if(pieces.get(x).equals(board[0][7]) && pieces.get(x).hasMoved()==false)
+//				{
+//      //              piece = new Rook(pieces.get(x).getRow(),pieces.get(x).getCol(),pieces.get(x).getColor(),true, 2,false);
+//					pieces.get(x).setCol(5);
+//					pieces.get(x).setHasMoved(true);
+////                    p.setRow(r);
+////                    p.setCol(c);
+////                    p.setHasMoved(true);
+//				}
+//			}
+//			System.out.println("YYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYY");
+//		}
+//		else if(p.getType()==6 &&  p.getRow()==0&& c-oldc==-2 && p.getColor()==WHITE)
+//		{
+//			for(int x=0;x<pieces.size();x++)
+//			{
+//				if(pieces.get(x).equals(board[0][0]) && pieces.get(x).hasMoved()==false)
+//				{
+//       //             piece = new Rook(pieces.get(x).getRow(),pieces.get(x).getCol(),pieces.get(x).getColor(),true, 2,false);
+//					pieces.get(x).setCol(3);
+//					pieces.get(x).setHasMoved(true);
+////                    p.setRow(r);
+////                    p.setCol(c);
+////                    p.setHasMoved(true);
+//				}
+//			}
+//			System.out.println("YYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYY");
+//		}
+//		else if(p.getType()==6 && p.getRow()==7&& c-oldc==2 && p.getColor()==BLACK)
+//		{
+//			for(int x=0;x<pieces.size();x++)
+//			{
+//				if(pieces.get(x).equals(board[7][7]) && pieces.get(x).hasMoved()==false)
+//				{
+//      //              piece = new Rook(pieces.get(x).getRow(),pieces.get(x).getCol(),pieces.get(x).getColor(),true, 2,false);
+//					pieces.get(x).setCol(4);
+//					pieces.get(x).setHasMoved(true);
+////                    p.setRow(r);
+////                    p.setCol(c);
+////                    p.setHasMoved(true);
+//				}
+//			}
+//			System.out.println("YYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYY");
+//		}
+//		else if(p.getType()==6 &&  p.getRow()==7&& c-oldc==-2 && p.getColor()==BLACK)
+//		{
+//			for(int x=0;x<pieces.size();x++)
+//			{
+//				if(pieces.get(x).equals(board[7][0]) && pieces.get(x).hasMoved()==false)
+//				{
+//      //              piece = new Rook(pieces.get(x).getRow(),pieces.get(x).getCol(),pieces.get(x).getColor(),true, 2,false);
+//					pieces.get(x).setCol(2);
+//					pieces.get(x).setHasMoved(true);
+////                    p.setRow(r);
+////                    p.setCol(c);
+////                    p.setHasMoved(true);
+//				}
+//			}
+//			System.out.println("YYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYY");
+//		}
+	//	else {
 
 
-    	p.setRow(r);
-    	p.setCol(c);
-    	p.setHasMoved(true);
+            p.setRow(r);
+            p.setCol(c);
+            p.setHasMoved(true);
+     //   }
 
-   		updateBoard();
     	return piece;
    	}
 	public void revertMovePiece(int oldr, int oldc, Piece p, Piece pp, boolean hasMoved)
@@ -265,7 +274,11 @@ public class ChessGame
     	turn = x;
     }
 
-	public ArrayList<String> getMessages() {
+    public void setPieces(ArrayList<Piece> pieces) {
+        this.pieces = pieces;
+    }
+
+    public ArrayList<String> getMessages() {
 		return messages;
 	}
 

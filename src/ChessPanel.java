@@ -752,6 +752,8 @@ public class ChessPanel extends JPanel implements MouseListener, KeyListener
             boolean [][] arr = p.getAvailableMoves(cg.getBoard());
 
             //if something is aiming at it then the piece itself gets a weight boost of its own weight
+            //current weight is how many things its attacking vs how many things its being attacked by, or 1 thing its being attacked by
+            //if something is protecting it its the attacker minus piece
 
             for(int xx=0;xx<8;xx++)
             {
@@ -760,10 +762,22 @@ public class ChessPanel extends JPanel implements MouseListener, KeyListener
                     if(arr[xx][y]==true && isValidMove(p.getRow(),p.getCol(),xx,y,p)==true)
                     {
 
+
+
                         if(cg.getBoard()[xx][y]!=null)
                         {
                             moves.add(new MoveWeight(p, xx, y, cg.getBoard()[xx][y].getWeight()));
 
+                            boolean[][] arr3= p.getAvailableMoves(cg.getBoard());
+
+                            for(int z=0;z<arr3.length;z++)
+                            {
+                                for(int zz=0;zz<arr3[0].length;zz++)
+                                {
+                                    if(arr3[z][zz]==true && isValidMove(p.getRow(),p.getCol(),z,zz,p) && cg.getBoard()[z][zz]!=null)
+                                        moves.get(moves.size()-1).setWeight(moves.get(moves.size()-1).getWeight()-cg.getBoard()[z][zz].getWeight());
+                                }
+                            }
                             for(int z=0;z<whitePieces.size();z++)
                             {
                                 Piece ppp = whitePieces.get(z);
@@ -785,6 +799,17 @@ public class ChessPanel extends JPanel implements MouseListener, KeyListener
                         if(cg.getBoard()[xx][y]==null)
                         {
                             moves.add(new MoveWeight(p, xx, y, 0));
+                            boolean[][] arr3= p.getAvailableMoves(cg.getBoard());
+
+                            for(int z=0;z<arr3.length;z++)
+                            {
+                                for(int zz=0;zz<arr3[0].length;zz++)
+                                {
+                                    if(arr3[z][zz]==true && isValidMove(p.getRow(),p.getCol(),z,zz,p) && cg.getBoard()[z][zz]!=null)
+                                        moves.get(moves.size()-1).setWeight(moves.get(moves.size()-1).getWeight()-cg.getBoard()[z][zz].getWeight());
+                                }
+                            }
+
                             for(int z=0;z<whitePieces.size();z++)
                             {
                                 Piece ppp = whitePieces.get(z);
@@ -858,8 +883,28 @@ public class ChessPanel extends JPanel implements MouseListener, KeyListener
                         if(arr[xx][yy]==true && isValidMove(r,c,xx,yy,m.getP())&& cg.getBoard()[xx][yy]!=null)
                         {
                             int newWeight = m.getWeight() + cg.getBoard()[xx][yy].getWeight();
-                            if(newWeight> m.getWeight())
+                            for (int g = 0; g < whitePieces.size(); g++)
+                            {
+                                Piece ppp = whitePieces.get(g);
+                                boolean[][] arr2 = ppp.getAvailableMoves(cg.getBoard());
+
+
+                                for (int xxx = 0; xxx < arr2.length; xxx++)
+                                {
+                                    for (int yyy = 0; yyy < arr2[0].length; yyy++)
+                                    {
+                                        if (arr[xxx][yyy] == true && isValidMove(ppp.getRow(), ppp.getCol(), xxx, yyy,ppp) && xxx==xx && yyy==yy)
+                                        {
+                                            newWeight= m.getWeight()-m.getP().getWeight();
+                                        }
+                                    }
+                                }
+
+                            }
+
+                            if (newWeight > m.getWeight())
                                 m.setWeight(newWeight);
+
 
                         }
                     }
@@ -890,8 +935,27 @@ public class ChessPanel extends JPanel implements MouseListener, KeyListener
             System.out.println("PPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPP");
             randomAIMove();
         }
+        else if(bestMove.getWeight()==0)
+        {
+            ArrayList<MoveWeight> mw = new ArrayList<>();
+            System.out.println("LLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLL");
+            for(int x=0;x<moves.size();x++)
+            {
+
+
+                if(moves.get(x).getWeight()==0)
+                    mw.add(moves.get(x));
+            }
+            int random = (int)(Math.random()*moves.size());
+
+            cg.movePiece(mw.get(random).getP().getRow(),mw.get(random).getP().getCol(),mw.get(random).getR(), mw.get(random).getC(),mw.get(random).getP());
+            cg.setTurn(cg.WHITE);
+            selected = null;
+            updateStatus();
+        }
         else {
-            for (int x = 0; x < cg.getPieces().size(); x++) {
+            for (int x = 0; x < cg.getPieces().size(); x++)
+            {
                 if (cg.getPieces().get(x).equals(bestMove.getP()))
                 {
                     cg.movePiece(cg.getPieces().get(x).getRow(), cg.getPieces().get(x).getCol(), bestMove.getR(), bestMove.getC(), cg.getPieces().get(x));

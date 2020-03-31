@@ -195,6 +195,7 @@ public class ChessGame
             p.setCol(c);
             p.setHasMoved(true);
      //   }
+		updateBoard();
 
     	return piece;
    	}

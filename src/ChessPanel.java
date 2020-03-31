@@ -290,20 +290,20 @@ public class ChessPanel extends JPanel implements MouseListener, KeyListener
             cg.getMessages().add("White's Turn");
         if(cg.getTurn()==ChessGame.BLACK)
             cg.getMessages().add("Black's Turn");
-//        if(inCheckmate(cg.WHITE) && cg.getTurn()==cg.WHITE)
-//        {
-//            cg.setStatus(cg.BLACK_WINS);
-//            cg.getMessages().clear();
-//            cg.getMessages().add("Black Wins!");
-//            cg.getMessages().add("Press r to reset");
-//        }
-//        else if(inCheckmate(cg.BLACK) && cg.getTurn()==cg.BLACK)
-//        {
-//            cg.setStatus(cg.WHITE_WINS);
-//            cg.getMessages().clear();
-//            cg.getMessages().add("White Wins!");
-//            cg.getMessages().add("Press r to reset");
-//        }
+        if(inCheckmate(cg.WHITE) && cg.getTurn()==cg.WHITE)
+        {
+            cg.setStatus(cg.BLACK_WINS);
+            cg.getMessages().clear();
+            cg.getMessages().add("Black Wins!");
+            cg.getMessages().add("Press r to reset");
+        }
+        else if(inCheckmate(cg.BLACK) && cg.getTurn()==cg.BLACK)
+        {
+            cg.setStatus(cg.WHITE_WINS);
+            cg.getMessages().clear();
+            cg.getMessages().add("White Wins!");
+            cg.getMessages().add("Press r to reset");
+        }
 //        else if(inStalemate(cg.WHITE) && cg.getTurn()==cg.WHITE)
 //        {
 //            cg.setStatus(cg.STALEMATE);
@@ -625,78 +625,79 @@ public class ChessPanel extends JPanel implements MouseListener, KeyListener
 						else if (selected != null && e.getX() > x && e.getX() < x + 75 && e.getY() > y && e.getY() < y + 75 && (cg.getBoard()[y / 75][(x-xOffset) / 75] == null || cg.getBoard()[y / 75][(x-xOffset) / 75].getColor() != selected.getColor()) && isValidMove(selected.getRow(), selected.getCol(), y / 75, (x-xOffset) / 75, selected) == true)
 						{
 
-//                            if(selected.getType()==6 && selected.getRow()==0&& (x-xOffset) / 75-selected.getCol()==2 && selected.getColor()==cg.WHITE)
-//                            {
-//                                for(int xx=0;xx<cg.getPieces().size();xx++)
-//                                {
-//                                    if(cg.getPieces().get(xx).equals(cg.getBoard()[0][7]) && cg.getPieces().get(xx).hasMoved()==false)
-//                                    {
-//                                        //              piece = new Rook(pieces.get(xx).getRow(),pieces.get(xx).getCol(),pieces.get(xx).getColor(),true, 2,false);
-//                                        cg.getPieces().get(xx).setCol(5);
-//                                        cg.getPieces().get(xx).setHasMoved(true);
-////                    p.setRow(r);
-////                    p.setCol(c);
-////                    p.setHasMoved(true);
-//                                    }
-//                                }
-//                                System.out.println("YYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYY");
-//                            }
-//                            else if(selected.getType()==6 &&  selected.getRow()==0&& (x-xOffset) / 75-selected.getCol()==-2 && selected.getColor()==cg.WHITE)
-//                            {
-//                                for(int xx=0;xx<cg.getPieces().size();xx++)
-//                                {
-//                                    if(cg.getPieces().get(xx).equals(cg.getBoard()[0][0]) && cg.getPieces().get(xx).hasMoved()==false)
-//                                    {
-//                                        //             piece = new Rook(pieces.get(xx).getRow(),pieces.get(xx).getCol(),pieces.get(xx).getColor(),true, 2,false);
-//                                        cg.getPieces().get(xx).setCol(3);
-//                                        cg.getPieces().get(xx).setHasMoved(true);
-////                    p.setRow(r);
-////                    p.setCol(c);
-////                    p.setHasMoved(true);
-//                                    }
-//                                }
-//                                System.out.println("YYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYY");
-//                            }
-//                            else if(selected.getType()==6 && selected.getRow()==7&& (x-xOffset) / 75-selected.getCol()==2 && selected.getColor()==cg.BLACK)
-//                            {
-//                                for(int xx=0;xx<cg.getPieces().size();xx++)
-//                                {
-//                                    if(cg.getPieces().get(xx).equals(cg.getBoard()[7][7]) && cg.getPieces().get(xx).hasMoved()==false)
-//                                    {
-//                                        //              piece = new Rook(pieces.get(xx).getRow(),pieces.get(xx).getCol(),pieces.get(xx).getColor(),true, 2,false);
-//                                        cg.getPieces().get(xx).setCol(4);
-//                                        cg.getPieces().get(xx).setHasMoved(true);
-////                    p.setRow(r);
-////                    p.setCol(c);
-////                    p.setHasMoved(true);
-//                                    }
-//                                }
-//                                System.out.println("YYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYY");
-//                            }
-//                            else if(selected.getType()==6 &&  selected.getRow()==7&& (x-xOffset) / 75-selected.getCol()==-2 && selected.getColor()==cg.BLACK)
-//                            {
-//                                for(int xx=0;xx<cg.getPieces().size();xx++)
-//                                {
-//                                    if(cg.getPieces().get(xx).equals(cg.getBoard()[7][0]) && cg.getPieces().get(xx).hasMoved()==false)
-//                                    {
-//                                        //              piece = new Rook(pieces.get(xx).getRow(),pieces.get(xx).getCol(),pieces.get(xx).getColor(),true, 2,false);
-//                                        cg.getPieces().get(xx).setCol(2);
-//                                        cg.getPieces().get(xx).setHasMoved(true);
-////                    p.setRow(r);
-////                    p.setCol(c);
-////                    p.setHasMoved(true);
-//                                    }
-//                                }
-//                                System.out.println("YYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYY");
-//                            }
-//
+                            if(selected.getType()==6 && selected.getRow()==0&& (x-xOffset) / 75-selected.getCol()==2 && selected.getColor()==cg.WHITE)
+                            {
+                                for(int xx=0;xx<cg.getPieces().size();xx++)
+                                {
+                                    if(cg.getPieces().get(xx).equals(cg.getBoard()[0][7]) && cg.getPieces().get(xx).hasMoved()==false)
+                                    {
+                                        //              piece = new Rook(pieces.get(xx).getRow(),pieces.get(xx).getCol(),pieces.get(xx).getColor(),true, 2,false);
+                                        cg.getPieces().get(xx).setCol(5);
+                                        cg.getPieces().get(xx).setHasMoved(true);
+//                    p.setRow(r);
+//                    p.setCol(c);
+//                    p.setHasMoved(true);
+                                    }
+                                }
+                                System.out.println("YYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYY");
+                            }
+                            else if(selected.getType()==6 &&  selected.getRow()==0&& (x-xOffset) / 75-selected.getCol()==-2 && selected.getColor()==cg.WHITE)
+                            {
+                                for(int xx=0;xx<cg.getPieces().size();xx++)
+                                {
+                                    if(cg.getPieces().get(xx).equals(cg.getBoard()[0][0]) && cg.getPieces().get(xx).hasMoved()==false)
+                                    {
+                                        //             piece = new Rook(pieces.get(xx).getRow(),pieces.get(xx).getCol(),pieces.get(xx).getColor(),true, 2,false);
+                                        cg.getPieces().get(xx).setCol(3);
+                                        cg.getPieces().get(xx).setHasMoved(true);
+//                    p.setRow(r);
+//                    p.setCol(c);
+//                    p.setHasMoved(true);
+                                    }
+                                }
+                                System.out.println("YYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYY");
+                            }
+                            else if(selected.getType()==6 && selected.getRow()==7&& (x-xOffset) / 75-selected.getCol()==2 && selected.getColor()==cg.BLACK)
+                            {
+                                for(int xx=0;xx<cg.getPieces().size();xx++)
+                                {
+                                    if(cg.getPieces().get(xx).equals(cg.getBoard()[7][7]) && cg.getPieces().get(xx).hasMoved()==false)
+                                    {
+                                        //              piece = new Rook(pieces.get(xx).getRow(),pieces.get(xx).getCol(),pieces.get(xx).getColor(),true, 2,false);
+                                        cg.getPieces().get(xx).setCol(4);
+                                        cg.getPieces().get(xx).setHasMoved(true);
+//                    p.setRow(r);
+//                    p.setCol(c);
+//                    p.setHasMoved(true);
+                                    }
+                                }
+                                System.out.println("YYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYY");
+                            }
+                            else if(selected.getType()==6 &&  selected.getRow()==7&& (x-xOffset) / 75-selected.getCol()==-2 && selected.getColor()==cg.BLACK)
+                            {
+                                for(int xx=0;xx<cg.getPieces().size();xx++)
+                                {
+                                    if(cg.getPieces().get(xx).equals(cg.getBoard()[7][0]) && cg.getPieces().get(xx).hasMoved()==false)
+                                    {
+                                        //              piece = new Rook(pieces.get(xx).getRow(),pieces.get(xx).getCol(),pieces.get(xx).getColor(),true, 2,false);
+                                        cg.getPieces().get(xx).setCol(2);
+                                        cg.getPieces().get(xx).setHasMoved(true);
+//                    p.setRow(r);
+//                    p.setCol(c);
+//                    p.setHasMoved(true);
+                                    }
+                                }
+                                System.out.println("YYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYY");
+                            }
+
 
                             cg.movePiece(selected.getRow(), selected.getCol(), y / 75, (x-xOffset) / 75, selected);
 
 
 							selected = null;
 							cg.setTurn(cg.BLACK);
-							updateStatus();
+							//updateStatus();
+							repaint();
 						}
 					}
 				}
@@ -724,70 +725,70 @@ public class ChessPanel extends JPanel implements MouseListener, KeyListener
                                 updateStatus();
                             }
                             else if (selected != null && e.getX() > x && e.getX() < x + 75 && e.getY() > y && e.getY() < y + 75 && (cg.getBoard()[y / 75][(x - xOffset) / 75] == null || cg.getBoard()[y / 75][(x - xOffset) / 75].getColor() != selected.getColor()) && isValidMove(selected.getRow(), selected.getCol(), y / 75, (x - xOffset) / 75, selected) == true) {
-//                                if(selected.getType()==6 && selected.getRow()==0&& (x-xOffset) / 75-selected.getCol()==2 && selected.getColor()==cg.WHITE)
-//                                {
-//                                    for(int xx=0;xx<cg.getPieces().size();xx++)
-//                                    {
-//                                        if(cg.getPieces().get(xx).equals(cg.getBoard()[0][7]) && cg.getPieces().get(xx).hasMoved()==false)
-//                                        {
-//                                            //              piece = new Rook(pieces.get(xx).getRow(),pieces.get(xx).getCol(),pieces.get(xx).getColor(),true, 2,false);
-//                                            cg.getPieces().get(xx).setCol(5);
-//                                            cg.getPieces().get(xx).setHasMoved(true);
-////                    p.setRow(r);
-////                    p.setCol(c);
-////                    p.setHasMoved(true);
-//                                        }
-//                                    }
-//                                    System.out.println("YYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYY");
-//                                }
-//                                else if(selected.getType()==6 &&  selected.getRow()==0&& (x-xOffset) / 75-selected.getCol()==-2 && selected.getColor()==cg.WHITE)
-//                                {
-//                                    for(int xx=0;xx<cg.getPieces().size();xx++)
-//                                    {
-//                                        if(cg.getPieces().get(xx).equals(cg.getBoard()[0][0]) && cg.getPieces().get(xx).hasMoved()==false)
-//                                        {
-//                                            //             piece = new Rook(pieces.get(xx).getRow(),pieces.get(xx).getCol(),pieces.get(xx).getColor(),true, 2,false);
-//                                            cg.getPieces().get(xx).setCol(3);
-//                                            cg.getPieces().get(xx).setHasMoved(true);
-////                    p.setRow(r);
-////                    p.setCol(c);
-////                    p.setHasMoved(true);
-//                                        }
-//                                    }
-//                                    System.out.println("YYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYY");
-//                                }
-//                                else if(selected.getType()==6 && selected.getRow()==7&& (x-xOffset) / 75-selected.getCol()==2 && selected.getColor()==cg.BLACK)
-//                                {
-//                                    for(int xx=0;xx<cg.getPieces().size();xx++)
-//                                    {
-//                                        if(cg.getPieces().get(xx).equals(cg.getBoard()[7][7]) && cg.getPieces().get(xx).hasMoved()==false)
-//                                        {
-//                                            //              piece = new Rook(pieces.get(xx).getRow(),pieces.get(xx).getCol(),pieces.get(xx).getColor(),true, 2,false);
-//                                            cg.getPieces().get(xx).setCol(4);
-//                                            cg.getPieces().get(xx).setHasMoved(true);
-////                    p.setRow(r);
-////                    p.setCol(c);
-////                    p.setHasMoved(true);
-//                                        }
-//                                    }
-//                                    System.out.println("YYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYY");
-//                                }
-//                                else if(selected.getType()==6 &&  selected.getRow()==7&& (x-xOffset) / 75-selected.getCol()==-2 && selected.getColor()==cg.BLACK)
-//                                {
-//                                    for(int xx=0;xx<cg.getPieces().size();xx++)
-//                                    {
-//                                        if(cg.getPieces().get(xx).equals(cg.getBoard()[7][0]) && cg.getPieces().get(xx).hasMoved()==false)
-//                                        {
-//                                            //              piece = new Rook(pieces.get(xx).getRow(),pieces.get(xx).getCol(),pieces.get(xx).getColor(),true, 2,false);
-//                                            cg.getPieces().get(xx).setCol(2);
-//                                            cg.getPieces().get(xx).setHasMoved(true);
-////                    p.setRow(r);
-////                    p.setCol(c);
-////                    p.setHasMoved(true);
-//                                        }
-//                                    }
-//                                    System.out.println("YYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYY");
-//                                }
+                                if(selected.getType()==6 && selected.getRow()==0&& (x-xOffset) / 75-selected.getCol()==2 && selected.getColor()==cg.WHITE)
+                                {
+                                    for(int xx=0;xx<cg.getPieces().size();xx++)
+                                    {
+                                        if(cg.getPieces().get(xx).equals(cg.getBoard()[0][7]) && cg.getPieces().get(xx).hasMoved()==false)
+                                        {
+                                            //              piece = new Rook(pieces.get(xx).getRow(),pieces.get(xx).getCol(),pieces.get(xx).getColor(),true, 2,false);
+                                            cg.getPieces().get(xx).setCol(5);
+                                            cg.getPieces().get(xx).setHasMoved(true);
+//                    p.setRow(r);
+//                    p.setCol(c);
+//                    p.setHasMoved(true);
+                                        }
+                                    }
+                                    System.out.println("YYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYY");
+                                }
+                                else if(selected.getType()==6 &&  selected.getRow()==0&& (x-xOffset) / 75-selected.getCol()==-2 && selected.getColor()==cg.WHITE)
+                                {
+                                    for(int xx=0;xx<cg.getPieces().size();xx++)
+                                    {
+                                        if(cg.getPieces().get(xx).equals(cg.getBoard()[0][0]) && cg.getPieces().get(xx).hasMoved()==false)
+                                        {
+                                            //             piece = new Rook(pieces.get(xx).getRow(),pieces.get(xx).getCol(),pieces.get(xx).getColor(),true, 2,false);
+                                            cg.getPieces().get(xx).setCol(3);
+                                            cg.getPieces().get(xx).setHasMoved(true);
+//                    p.setRow(r);
+//                    p.setCol(c);
+//                    p.setHasMoved(true);
+                                        }
+                                    }
+                                    System.out.println("YYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYY");
+                                }
+                                else if(selected.getType()==6 && selected.getRow()==7&& (x-xOffset) / 75-selected.getCol()==2 && selected.getColor()==cg.BLACK)
+                                {
+                                    for(int xx=0;xx<cg.getPieces().size();xx++)
+                                    {
+                                        if(cg.getPieces().get(xx).equals(cg.getBoard()[7][7]) && cg.getPieces().get(xx).hasMoved()==false)
+                                        {
+                                            //              piece = new Rook(pieces.get(xx).getRow(),pieces.get(xx).getCol(),pieces.get(xx).getColor(),true, 2,false);
+                                            cg.getPieces().get(xx).setCol(4);
+                                            cg.getPieces().get(xx).setHasMoved(true);
+//                    p.setRow(r);
+//                    p.setCol(c);
+//                    p.setHasMoved(true);
+                                        }
+                                    }
+                                    System.out.println("YYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYY");
+                                }
+                                else if(selected.getType()==6 &&  selected.getRow()==7&& (x-xOffset) / 75-selected.getCol()==-2 && selected.getColor()==cg.BLACK)
+                                {
+                                    for(int xx=0;xx<cg.getPieces().size();xx++)
+                                    {
+                                        if(cg.getPieces().get(xx).equals(cg.getBoard()[7][0]) && cg.getPieces().get(xx).hasMoved()==false)
+                                        {
+                                            //              piece = new Rook(pieces.get(xx).getRow(),pieces.get(xx).getCol(),pieces.get(xx).getColor(),true, 2,false);
+                                            cg.getPieces().get(xx).setCol(2);
+                                            cg.getPieces().get(xx).setHasMoved(true);
+//                    p.setRow(r);
+//                    p.setCol(c);
+//                    p.setHasMoved(true);
+                                        }
+                                    }
+                                    System.out.println("YYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYY");
+                                }
                                 cg.movePiece(selected.getRow(), selected.getCol(), y / 75, (x - xOffset) / 75, selected);
 
                                 selected = null;

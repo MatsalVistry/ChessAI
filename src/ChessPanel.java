@@ -730,212 +730,251 @@ public class ChessPanel extends JPanel implements MouseListener, KeyListener
     public void minimax3(int color)
     {
         updateStatus();
-        ArrayList<Piece> blackPieces = new ArrayList<>();
-        ArrayList<Piece> whitePieces = new ArrayList<>();
-        ArrayList<MoveWeight> moves = new ArrayList<>();
+        if(cg.getStatus()!=cg.WHITE_WINS && cg.getStatus()!=cg.TRANSFORMATION_WHITE) {
+            ArrayList<Piece> blackPieces = new ArrayList<>();
+            ArrayList<Piece> whitePieces = new ArrayList<>();
+            ArrayList<MoveWeight> moves = new ArrayList<>();
 
 
-        MoveWeight bestMove = new MoveWeight(cg.getPieces().get(0),0,0,-10000);
-        // bestMove.setWeight(-10000);
-        System.out.println(bestMove.weight);
-        for(int x=0;x<cg.getPieces().size();x++)
-        {
-            if(cg.getPieces().get(x).getColor()==color)
-                blackPieces.add(cg.getPieces().get(x));
-            else
-                whitePieces.add(cg.getPieces().get(x));
-        }
-        for(int x=0;x<blackPieces.size();x++)
-        {
-            Piece p = blackPieces.get(x);
-
-            boolean [][] arr = p.getAvailableMoves(cg.getBoard());
-
-            //if something is aiming at it then the piece itself gets a weight boost of its own weight
-            //current weight is how many things its attacking vs how many things its being attacked by, or 1 thing its being attacked by
-            //if something is protecting it its the attacker minus piece
-
-            for(int xx=0;xx<8;xx++)
-            {
-                for(int y=0;y<8;y++)
-                {
-                    if(arr[xx][y]==true && isValidMove(p.getRow(),p.getCol(),xx,y,p)==true)
-                    {
-
-
-
-                        if(cg.getBoard()[xx][y]!=null)
-                        {
-                            moves.add(new MoveWeight(p, xx, y, cg.getBoard()[xx][y].getWeight()));
-
-                            boolean[][] arr3= p.getAvailableMoves(cg.getBoard());
-
-                            for(int z=0;z<arr3.length;z++)
-                            {
-                                for(int zz=0;zz<arr3[0].length;zz++)
-                                {
-                                    if(arr3[z][zz]==true && isValidMove(p.getRow(),p.getCol(),z,zz,p) && cg.getBoard()[z][zz]!=null)
-                                        moves.get(moves.size()-1).setWeight(moves.get(moves.size()-1).getWeight()-cg.getBoard()[z][zz].getWeight());
-                                }
-                            }
-                            for(int z=0;z<whitePieces.size();z++)
-                            {
-                                Piece ppp = whitePieces.get(z);
-                                boolean [][] arr2 = ppp.getAvailableMoves(cg.getBoard());
-
-                                for(int a=0;a<arr2.length;a++)
-                                {
-                                    for(int aa=0;aa<arr2[0].length;aa++)
-                                    {
-                                        if(arr2[a][aa]==true && p.getRow()==a && p.getCol()==aa && isValidMove(ppp.getRow(),ppp.getCol(),a,aa,ppp))
-                                            moves.get(moves.size()-1).setWeight(moves.get(moves.size()-1).getWeight()+p.getWeight());
-                                    }
-                                }
-                            }
-
-                            System.out.println("MMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMM");
-
-                        }
-                        if(cg.getBoard()[xx][y]==null)
-                        {
-                            moves.add(new MoveWeight(p, xx, y, 0));
-                            boolean[][] arr3= p.getAvailableMoves(cg.getBoard());
-
-                            for(int z=0;z<arr3.length;z++)
-                            {
-                                for(int zz=0;zz<arr3[0].length;zz++)
-                                {
-                                    if(arr3[z][zz]==true && isValidMove(p.getRow(),p.getCol(),z,zz,p) && cg.getBoard()[z][zz]!=null)
-                                        moves.get(moves.size()-1).setWeight(moves.get(moves.size()-1).getWeight()-cg.getBoard()[z][zz].getWeight());
-                                }
-                            }
-
-                            for(int z=0;z<whitePieces.size();z++)
-                            {
-                                Piece ppp = whitePieces.get(z);
-                                boolean [][] arr2 = ppp.getAvailableMoves(cg.getBoard());
-
-                                for(int a=0;a<arr2.length;a++)
-                                {
-                                    for(int aa=0;aa<arr2[0].length;aa++)
-                                    {
-                                        if(arr2[a][aa]==true && p.getRow()==a && p.getCol()==aa && isValidMove(ppp.getRow(),ppp.getCol(),a,aa,ppp))
-                                            moves.get(moves.size()-1).setWeight(moves.get(moves.size()-1).getWeight()+p.getWeight());
-                                    }
-                                }
-                            }
-                            System.out.println("MMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMM");
-
-                        }
-                    }
-
-                }
+            MoveWeight bestMove = new MoveWeight(cg.getPieces().get(0), 0, 0, -10000);
+            // bestMove.setWeight(-10000);
+            System.out.println(bestMove.weight);
+            for (int x = 0; x < cg.getPieces().size(); x++) {
+                if (cg.getPieces().get(x).getColor() == color)
+                    blackPieces.add(cg.getPieces().get(x));
+                else
+                    whitePieces.add(cg.getPieces().get(x));
             }
-        }
-        int status = 0;
-        for(int x=0;x<moves.size();x++)
-        {
-            MoveWeight m = moves.get(x);
-            int oldr = m.getP().getRow();
-            int oldc = m.getP().getCol();
-            int r = m.getR();
-            int c = m.getC();
-            boolean hm = m.getP().hasMoved();
-            Piece pp = cg.movePiece(oldr,oldc,r,c,m.getP());
-            cg.updateBoard();
+            for (int x = 0; x < blackPieces.size(); x++) {
+                Piece p = blackPieces.get(x);
 
-            for(int y=0;y<cg.getPieces().size();y++)
-            {
-                Piece p = cg.getPieces().get(y);
-                if(p.getColor()!=color)
-                {
-                    boolean [][] arr = p.getAvailableMoves(cg.getBoard());
+                boolean[][] arr = p.getAvailableMoves(cg.getBoard());
 
-                    for(int xx=0;xx<arr.length;xx++)
-                    {
-                        for(int yy=0;yy<arr[0].length;yy++)
-                        {
-                            if( r==xx && c==yy &&arr[xx][yy]==true && isValidMove(p.getRow(),p.getCol(),xx,yy,p))
-                            {
-                                m.setChanged(true);
-                                m.setWeight(m.getWeight() - m.getP().getWeight());
-                                status = 1;
-                                if(status==1)
-                                    break;
-                            }
-                        }
-                        if(status==1)
-                            break;
-                    }
-                    if(status==1)
-                        break;
-                }
-            }
-            //double for loop again to check all available moves
-            if(m.changed==false)
-            {
-                boolean[][] arr = m.getP().getAvailableMoves(cg.getBoard());
+                //if something is aiming at it then the piece itself gets a weight boost of its own weight
+                //current weight is how many things its attacking vs how many things its being attacked by, or 1 thing its being attacked by
+                //if something is protecting it its the attacker minus piece
+                //check if anything is protecting the future move piece
 
-                for(int xx=0;xx<arr.length;xx++)
-                {
-                    for(int yy=0;yy<arr[0].length;yy++)
-                    {
-                        if(arr[xx][yy]==true && isValidMove(r,c,xx,yy,m.getP())&& cg.getBoard()[xx][yy]!=null)
-                        {
-                            int newWeight = m.getWeight() + cg.getBoard()[xx][yy].getWeight();
-                            for (int g = 0; g < whitePieces.size(); g++)
-                            {
-                                Piece ppp = whitePieces.get(g);
-                                boolean[][] arr2 = ppp.getAvailableMoves(cg.getBoard());
+                for (int xx = 0; xx < 8; xx++) {
+                    for (int y = 0; y < 8; y++) {
+                        if (arr[xx][y] == true && isValidMove(p.getRow(), p.getCol(), xx, y, p) == true) {
+                            if (cg.getBoard()[xx][y] != null) {
+                                moves.add(new MoveWeight(p, xx, y, cg.getBoard()[xx][y].getWeight()));
 
+//                            boolean[][] arr3= p.getAvailableMoves(cg.getBoard());
+//
+//                            for(int z=0;z<arr3.length;z++)
+//                            {
+//                                for(int zz=0;zz<arr3[0].length;zz++)
+//                                {
+//                                    if(arr3[z][zz]==true && isValidMove(p.getRow(),p.getCol(),z,zz,p) && cg.getBoard()[z][zz]!=null)
+//                                        moves.get(moves.size()-1).setWeight(moves.get(moves.size()-1).getWeight()-cg.getBoard()[z][zz].getWeight());
+//                                }
+//                            }
+                                for (int z = 0; z < whitePieces.size(); z++) {
+                                    Piece ppp = whitePieces.get(z);
+                                    boolean[][] arr2 = ppp.getAvailableMoves(cg.getBoard());
 
-                                for (int xxx = 0; xxx < arr2.length; xxx++)
-                                {
-                                    for (int yyy = 0; yyy < arr2[0].length; yyy++)
-                                    {
-                                        if (arr[xxx][yyy] == true && isValidMove(ppp.getRow(), ppp.getCol(), xxx, yyy,ppp) && xxx==xx && yyy==yy)
-                                        {
-                                            newWeight= m.getWeight()-m.getP().getWeight();
+                                    for (int a = 0; a < arr2.length; a++) {
+                                        for (int aa = 0; aa < arr2[0].length; aa++) {
+                                            if (arr2[a][aa] == true && p.getRow() == a && p.getCol() == aa && isValidMove(ppp.getRow(), ppp.getCol(), a, aa, ppp)) {
+                                                boolean hm = ppp.hasMoved();
+                                                int oldr = ppp.getRow();
+                                                int oldc = ppp.getCol();
+                                                Piece pppp = cg.movePiece(ppp.getRow(), ppp.getCol(), a, aa, ppp);
+
+                                                cg.updateBoard();
+                                                int status = 0;
+                                                for (int s = 0; s < blackPieces.size(); s++) {
+                                                    Piece pp = blackPieces.get(s);
+
+                                                    boolean[][] arr4 = pp.getAvailableMoves(cg.getBoard());
+
+                                                    for (int zz = 0; zz < arr4.length; zz++) {
+                                                        for (int zzz = 0; zzz < arr4[0].length; zzz++) {
+                                                            if (arr4[zz][zzz] == true && a == zz && aa == zzz && isValidMove(pp.getRow(), pp.getCol(), zz, zzz, pp)) {
+                                                                status = 1;
+                                                                moves.get(moves.size() - 1).setWeight(moves.get(moves.size() - 1).getWeight() - ppp.getWeight());
+                                                            }
+                                                            if (status == 1)
+                                                                break;
+                                                        }
+                                                        if (status == 1)
+                                                            break;
+                                                    }
+                                                    if (status == 1)
+                                                        break;
+                                                }
+                                                cg.revertMovePiece(oldr, oldc, ppp, pppp, hm);
+                                                cg.updateBoard();
+                                                moves.get(moves.size() - 1).setWeight(moves.get(moves.size() - 1).getWeight() + p.getWeight());
+                                            }
                                         }
                                     }
                                 }
 
+                                System.out.println("MMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMM");
+
                             }
+                            if (cg.getBoard()[xx][y] == null) {
+                                moves.add(new MoveWeight(p, xx, y, 0));
+//                            boolean[][] arr3= p.getAvailableMoves(cg.getBoard());
+//
+//                            for(int z=0;z<arr3.length;z++)
+//                            {
+//                                for(int zz=0;zz<arr3[0].length;zz++)
+//                                {
+//                                    if(arr3[z][zz]==true && isValidMove(p.getRow(),p.getCol(),z,zz,p) && cg.getBoard()[z][zz]!=null)
+//                                        moves.get(moves.size()-1).setWeight(moves.get(moves.size()-1).getWeight()-cg.getBoard()[z][zz].getWeight());
+//                                }
+//                            }
 
-                            if (newWeight > m.getWeight())
-                                m.setWeight(newWeight);
+                                for (int z = 0; z < whitePieces.size(); z++) {
+                                    Piece ppp = whitePieces.get(z);
+                                    boolean[][] arr2 = ppp.getAvailableMoves(cg.getBoard());
 
+                                    for (int a = 0; a < arr2.length; a++) {
+                                        for (int aa = 0; aa < arr2[0].length; aa++) {
+                                            if (arr2[a][aa] == true && p.getRow() == a && p.getCol() == aa && isValidMove(ppp.getRow(), ppp.getCol(), a, aa, ppp)) {
+                                                boolean hm = ppp.hasMoved();
+                                                int oldr = ppp.getRow();
+                                                int oldc = ppp.getCol();
+                                                Piece pppp = cg.movePiece(ppp.getRow(), ppp.getCol(), a, aa, ppp);
 
+                                                cg.updateBoard();
+                                                int status = 0;
+                                                for (int s = 0; s < blackPieces.size(); s++) {
+                                                    Piece pp = blackPieces.get(s);
+
+                                                    boolean[][] arr4 = pp.getAvailableMoves(cg.getBoard());
+
+                                                    for (int zz = 0; zz < arr4.length; zz++) {
+                                                        for (int zzz = 0; zzz < arr4[0].length; zzz++) {
+                                                            if (arr4[zz][zzz] == true && a == zz && aa == zzz && isValidMove(pp.getRow(), pp.getCol(), zz, zzz, pp)) {
+                                                                status = 1;
+                                                                moves.get(moves.size() - 1).setWeight(moves.get(moves.size() - 1).getWeight() - ppp.getWeight());
+                                                            }
+                                                            if (status == 1)
+                                                                break;
+                                                        }
+                                                        if (status == 1)
+                                                            break;
+                                                    }
+                                                    if (status == 1)
+                                                        break;
+                                                }
+                                                cg.revertMovePiece(oldr, oldc, ppp, pppp, hm);
+                                                cg.updateBoard();
+                                                moves.get(moves.size() - 1).setWeight(moves.get(moves.size() - 1).getWeight() + p.getWeight());
+                                            }
+                                        }
+                                    }
+                                }
+                                System.out.println("MMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMM");
+
+                            }
                         }
+
                     }
                 }
             }
+            int status = 0;
+            for (int x = 0; x < moves.size(); x++) {
+                MoveWeight m = moves.get(x);
+                int oldr = m.getP().getRow();
+                int oldc = m.getP().getCol();
+                int r = m.getR();
+                int c = m.getC();
+                boolean hm = m.getP().hasMoved();
+                Piece pp = cg.movePiece(oldr, oldc, r, c, m.getP());
+                cg.updateBoard();
 
-            status = 0;
+                for (int y = 0; y < cg.getPieces().size(); y++) {
+                    Piece p = cg.getPieces().get(y);
+                    if (p.getColor() != color) {
+                        boolean[][] arr = p.getAvailableMoves(cg.getBoard());
 
-            cg.revertMovePiece(oldr,oldc,m.getP(),pp,hm);
+                        for (int xx = 0; xx < arr.length; xx++) {
+                            for (int yy = 0; yy < arr[0].length; yy++) {
+                                if (r == xx && c == yy && arr[xx][yy] == true && isValidMove(p.getRow(), p.getCol(), xx, yy, p)) {
+                                    m.setChanged(true);
+                                    m.setWeight(m.getWeight() - m.getP().getWeight());
+                                    status = 1;
+                                    if (status == 1)
+                                        break;
+                                }
+                            }
+                            if (status == 1)
+                                break;
+                        }
+                        if (status == 1)
+                            break;
+                    }
+                }
 
-        }
-        for(int x=0;x<moves.size();x++)
-        {
-            MoveWeight m = moves.get(x);
-            if(m.getWeight()>bestMove.getWeight())
-            {
-                bestMove.setP(m.getP());
-                bestMove.setR(m.getR());
-                bestMove.setC(m.getC());
-                bestMove.setWeight(m.getWeight());
+                if (m.changed == false)
+                {
+                    boolean[][] arr = m.getP().getAvailableMoves(cg.getBoard());
+
+                    for (int xx = 0; xx < arr.length; xx++)
+                    {
+                        for (int yy = 0; yy < arr[0].length; yy++)
+                        {
+                            if (arr[xx][yy] == true && isValidMove(r, c, xx, yy, m.getP()) && cg.getBoard()[xx][yy] != null)
+                            {
+                                int newWeight = m.getWeight() + cg.getBoard()[xx][yy].getWeight();
+
+                                for (int g = 0; g < whitePieces.size(); g++)
+                                {
+                                    Piece ppp = whitePieces.get(g);
+                                    boolean[][] arr2 = ppp.getAvailableMoves(cg.getBoard());
+
+
+                                    for (int xxx = 0; xxx < arr2.length; xxx++)
+                                    {
+                                        for (int yyy = 0; yyy < arr2[0].length; yyy++)
+                                        {
+                                            if (arr[xxx][yyy] == true && isValidMove(ppp.getRow(), ppp.getCol(), xxx, yyy, ppp) && xxx == xx && yyy == yy)
+                                            {
+                                                newWeight = m.getWeight() - m.getP().getWeight();
+                                            }
+                                        }
+                                    }
+
+                                }
+
+
+                                    m.setWeight(newWeight);
+
+
+                            }
+                        }
+                    }
+                }
+
+                status = 0;
+
+                cg.revertMovePiece(oldr, oldc, m.getP(), pp, hm);
+
             }
-        }
+            for (int x = 0; x < moves.size(); x++) {
+                MoveWeight m = moves.get(x);
+                if (m.getWeight() > bestMove.getWeight()) {
+                    bestMove.setP(m.getP());
+                    bestMove.setR(m.getR());
+                    bestMove.setC(m.getC());
+                    bestMove.setWeight(m.getWeight());
+                }
+            }
 
-        //     System.out.println(bestMove.getP().getRow()+"                                          "+bestMove.getP().getCol()+"                     "+bestMove.getWeight());
+            //     System.out.println(bestMove.getP().getRow()+"                                          "+bestMove.getP().getCol()+"                     "+bestMove.getWeight());
 
 
-        if(bestMove.getWeight()==-10000) {
-            System.out.println("PPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPP");
-            randomAIMove();
-        }
-        else if(bestMove.getWeight()==0)
+            if (bestMove.getWeight() == -10000) {
+                System.out.println("PPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPP");
+                randomAIMove();
+            }
+              else if(bestMove.getWeight()==0)
         {
             ArrayList<MoveWeight> mw = new ArrayList<>();
             System.out.println("LLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLL");
@@ -946,41 +985,37 @@ public class ChessPanel extends JPanel implements MouseListener, KeyListener
                 if(moves.get(x).getWeight()==0)
                     mw.add(moves.get(x));
             }
-            int random = (int)(Math.random()*moves.size());
+            int random = (int)(Math.random()*mw.size());
 
             cg.movePiece(mw.get(random).getP().getRow(),mw.get(random).getP().getCol(),mw.get(random).getR(), mw.get(random).getC(),mw.get(random).getP());
             cg.setTurn(cg.WHITE);
             selected = null;
             updateStatus();
         }
-        else {
-            for (int x = 0; x < cg.getPieces().size(); x++)
-            {
-                if (cg.getPieces().get(x).equals(bestMove.getP()))
-                {
-                    cg.movePiece(cg.getPieces().get(x).getRow(), cg.getPieces().get(x).getCol(), bestMove.getR(), bestMove.getC(), cg.getPieces().get(x));
-                    cg.setTurn(cg.WHITE);
-                    selected = null;
-                    updateStatus();
+            else {
+                for (int x = 0; x < cg.getPieces().size(); x++) {
+                    if (cg.getPieces().get(x).equals(bestMove.getP())) {
+                        cg.movePiece(cg.getPieces().get(x).getRow(), cg.getPieces().get(x).getCol(), bestMove.getR(), bestMove.getC(), cg.getPieces().get(x));
+                        cg.setTurn(cg.WHITE);
+                        selected = null;
+                        updateStatus();
 
+                    }
                 }
             }
-        }
-        if(cg.getStatus()==cg.TRANSFORMATION_BLACK)
-        {
-            for(int x=0;x<cg.getPieces().size();x++)
-            {
-                if (cg.getPieces().get(x).getType() == 1 && cg.getPieces().get(x).getRow() == 0)
-                {
-                    Piece p = cg.getPieces().remove(x);
+            if (cg.getStatus() == cg.TRANSFORMATION_BLACK) {
+                for (int x = 0; x < cg.getPieces().size(); x++) {
+                    if (cg.getPieces().get(x).getType() == 1 && cg.getPieces().get(x).getRow() == 0) {
+                        Piece p = cg.getPieces().remove(x);
 
-                    cg.getPieces().add(new Queen(p.getRow(), p.getCol(), p.getColor(), true, 5, true));
-                    cg.setStatus(cg.PLAYING);
+                        cg.getPieces().add(new Queen(p.getRow(), p.getCol(), p.getColor(), true, 5, true));
+                        cg.setStatus(cg.PLAYING);
 
+                    }
                 }
+                updateStatus();
+                repaint();
             }
-            updateStatus();
-            repaint();
         }
     }
  

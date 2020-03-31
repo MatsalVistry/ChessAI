@@ -2,8 +2,6 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="628062cd-a6bf-48c9-8ae0-4c3592487746" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/Chess/ChessPanel.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/Chess/ChessPanel.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/ChessPanel.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/ChessPanel.java" afterDir="false" />
     </list>
     <ignored path="$PROJECT_DIR$/out/" />
@@ -75,8 +73,8 @@
       <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/ChessPanel.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="313">
-              <caret line="788" column="37" lean-forward="true" selection-start-line="788" selection-start-column="37" selection-end-line="788" selection-end-column="37" />
+            <state relative-caret-position="133">
+              <caret line="974" column="31" lean-forward="true" selection-start-line="974" selection-start-column="31" selection-end-line="974" selection-end-column="31" />
               <folding>
                 <element signature="imports" expanded="true" />
               </folding>
@@ -127,6 +125,7 @@
       <find>pieces</find>
       <find>p</find>
       <find>x</find>
+      <find>if(arr2[a][aa]==true &amp;&amp; p.getRow()==a &amp;&amp; p.getCol()==aa &amp;&amp; isValidMove(ppp.getRow(),ppp.getCol(),a,aa,ppp))</find>
     </findStrings>
     <replaceStrings>
       <replace>x,y</replace>
@@ -370,8 +369,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/ChessPanel.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="313">
-          <caret line="788" column="37" lean-forward="true" selection-start-line="788" selection-start-column="37" selection-end-line="788" selection-end-column="37" />
+        <state relative-caret-position="133">
+          <caret line="974" column="31" lean-forward="true" selection-start-line="974" selection-start-column="31" selection-end-line="974" selection-end-column="31" />
           <folding>
             <element signature="imports" expanded="true" />
           </folding>

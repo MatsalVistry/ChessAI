@@ -524,7 +524,6 @@ public class ChessPanel extends JPanel implements MouseListener, KeyListener
                     if(arr[xx][y]==true && isValidMove(p.getRow(),p.getCol(),xx,y,p)==true)
                     {
                         if(bestMove==null) {
-                            System.out.println("MMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMM");
                             bestMove = new MoveWeight(p, xx, y, 0);
                         }
 
@@ -767,50 +766,7 @@ public class ChessPanel extends JPanel implements MouseListener, KeyListener
                                 moves.add(new MoveWeight(p, xx, y, cg.getBoard()[xx][y].getWeight()));
                                 moves.get(moves.size()-1).setChanged(true);
                                 int status = 0;
-//                                Piece pp = null;
 //
-//                                if(inCheck(cg.BLACK))
-//                                {
-//                                    for(int xxx=0; xxx<cg.getPieces().size();xxx++)
-//                                    {
-//                                        if(cg.getPieces().get(xxx).getColor()!=color)
-//                                        {
-//                                            boolean [][] arr5 = cg.getPieces().get(xxx).getAvailableMoves(cg.getBoard());
-//
-//                                            for(int yy=0;yy<arr5.length;yy++)
-//                                            {
-//                                                for(int z=0;z<arr5[0].length;z++)
-//                                                {
-//
-//                                                    if(arr5[yy][z]==true && cg.getBoard()[yy][z]!=null && cg.getBoard()[yy][z].getType()==6 && cg.getBoard()[yy][z].getColor()==color)
-//                                                    {
-//                                                        pp=cg.getBoard()[yy][z];
-//                                                    }
-//                                                }
-//                                            }
-//                                        }
-//                                    }
-//                                }
-//                                if(pp!=null)
-//                                {
-//                                    int r=0;
-//                                    int c=0;
-//                                    int weight=0;
-//                                    Piece pi = null;
-//                                    for(int a=0;a<blackPieces.size();a++)
-//                                    {
-//                                        Piece g = blackPieces.get(a);
-//
-//                                        boolean [][]arr4 = g.getAvailableMoves(cg.getBoard());
-//
-//                                        if(arr4[pp.getRow()][pp.getCol()]==true && isValidMove(g.getRow(),g.getCol(),pp.getRow(),pp.getCol(),g))
-//                                        {
-//                                            r=pp.getRow();
-//                                            c=pp.getCol();
-//                                            weight=
-//                                        }
-//                                    }
-//                                }
 //if move saves from being in check, add kings value to the weight;
                                 for (int z = 0; z < whitePieces.size(); z++) {
                                     Piece ppp = whitePieces.get(z);
@@ -836,7 +792,7 @@ public class ChessPanel extends JPanel implements MouseListener, KeyListener
 //                                                        for (int zzz = 0; zzz < arr4[0].length; zzz++) {
                                                             if (arr4[a][aa] == true &&  isValidMove(pp.getRow(), pp.getCol(), a, aa, pp)) {
                                                                 status = 1;
-                                                                moves.get(moves.size() - 1).setWeight(moves.get(moves.size() - 1).getWeight() + p.getWeight());
+                                                                moves.get(moves.size() - 1).setWeight(moves.get(moves.size() - 1).getWeight() - ppp.getWeight());
                                                             }
                                                             if (status == 1)
                                                                 break;
@@ -894,7 +850,7 @@ public class ChessPanel extends JPanel implements MouseListener, KeyListener
 //                                                        for (int zzz = 0; zzz < arr4[0].length; zzz++) {
                                                     if (arr4[a][aa] == true &&  isValidMove(pp.getRow(), pp.getCol(), a, aa, pp)) {
                                                         status = 1;
-                                                        moves.get(moves.size() - 1).setWeight(moves.get(moves.size() - 1).getWeight() + p.getWeight());
+                                                        moves.get(moves.size() - 1).setWeight(moves.get(moves.size() - 1).getWeight() - ppp.getWeight());
                                                     }
                                                     if (status == 1)
                                                         break;
@@ -929,6 +885,8 @@ public class ChessPanel extends JPanel implements MouseListener, KeyListener
                 }
             }
             int status = 0;
+            int counter = 1;
+            Piece pk = null;
             for (int x = 0; x < moves.size(); x++) {//piece moves to new location //use piece as null for changed
                 MoveWeight m = moves.get(x);
                 int oldr = m.getP().getRow();
@@ -938,27 +896,73 @@ public class ChessPanel extends JPanel implements MouseListener, KeyListener
                 boolean hm = m.getP().hasMoved();
                 Piece pp = cg.movePiece(oldr, oldc, r, c, m.getP());
                 cg.updateBoard();
-                if(check==true && inCheck(cg.BLACK)==false&& m.getP().getType()!=6)
-                    m.setWeight(m.getWeight()+900);
-                else if(check==true && inCheck(cg.BLACK)==false&& m.getP().getType()==6)
-                    m.setWeight(m.getWeight()+300);
-                if(inCheckmate(cg.WHITE))
-                    return;
 
-                for (int y = 0; y < cg.getPieces().size(); y++)
+                if (check == true && inCheck(cg.BLACK) == false && m.getP().getType() != 6 && pk==null&& pp!=null)
                 {
+                    m.setWeight(m.getWeight() + 90000*counter);
+                    counter++;
+                    pk = m.getP();
+                }
+                if (check == true && inCheck(cg.BLACK) == false && m.getP().getType() != 6 && pk!=null && pk.getWeight()>m.getP().getWeight() && pp!=null) {
+                    m.setWeight(m.getWeight() + 90000*counter);
+                    counter++;
+                    pk = m.getP();
+                }
+                if (check == true && inCheck(cg.BLACK) == false && m.getP().getType() != 6 && pk==null&& pp==null)
+                {
+                    m.setWeight(m.getWeight() + 3000);
+                    pk = m.getP();
+                }
+                else if (check == true && inCheck(cg.BLACK) == false && m.getP().getType() == 6 && pp!=null)
+                    m.setWeight(m.getWeight() + 40000);
+                else if (check == true && inCheck(cg.BLACK) == false && m.getP().getType() == 6 && pp==null)
+                    m.setWeight(m.getWeight() + 2000);
+                if (inCheck(cg.WHITE))
+                {
+                    boolean win = true;
+                    for(int g=0;g<whitePieces.size();g++)
+                    {
+                        Piece pa = whitePieces.get(g);
+
+                        boolean [][] po = pa.getAvailableMoves(cg.getBoard());
+
+                        for(int d=0;d<po.length;d++)
+                        {
+                            for(int dd=0;dd<po[0].length;dd++)
+                            {
+                                if(po[d][dd]==true && isValidMove(pa.getRow(),pa.getCol(),d,dd,pa))
+                                    win = false;
+                                if(win==false)
+                                    break;
+                            }
+                            if(win==false)
+                                break;
+                        }
+                        if(win==false)
+                            break;
+
+                    }
+                    if(win==true) {
+                        cg.setTurn(cg.WHITE);
+                        selected = null;
+                        updateStatus();
+                        return;
+                    }
+                }
+
+                for (int y = 0; y < cg.getPieces().size(); y++) {
                     Piece p = cg.getPieces().get(y);
                     if (p.getColor() != color) {//if any opposite colored piece is aiming at it, decrease weight by itself
                         boolean[][] arr = p.getAvailableMoves(cg.getBoard());
 
 //                        for (int xx = 0; xx < arr.length; xx++) {
 //                            for (int yy = 0; yy < arr[0].length; yy++) {
-                                if (arr[r][c] == true && isValidMove(p.getRow(), p.getCol(), r, c, p)) {
-                                //    m.setChanged(true);
-                                    m.setWeight(m.getWeight() - m.getP().getWeight());
-                                    status = 1;
-                                    if (status == 1)
-                                        break;
+                        if (arr[r][c] == true && isValidMove(p.getRow(), p.getCol(), r, c, p)) {
+                            //    m.setChanged(true);
+                            m.setWeight(m.getWeight() - m.getP().getWeight());
+                            status = 1;
+                            if (status == 1)
+                                break;
 //                                }
 //                            }
 
@@ -966,119 +970,253 @@ public class ChessPanel extends JPanel implements MouseListener, KeyListener
 
                     }
                 }
+                cg.revertMovePiece(oldr, oldc, m.getP(), pp, hm);
+                status = 0;
+            }
+            boolean proceed = true;
+            cg.updateBoard();
+            //check if any white piece is attacking a black piece, find which black piece is worth the most that is being attacked and can be protected, if it can be protected, then protect it
 
-                if (m.changed == false)
-                {//if new location didnt originally have a piece there make another move
-                    boolean[][] arr = m.getP().getAvailableMoves(cg.getBoard());
-                    int status2 = 0;
-                    int status4 = 0;
-                    for (int s = 0; s < whitePieces.size(); s++) {
-                        Piece o = whitePieces.get(s);
+            Piece attacked = null;
+            Piece defender = null;
 
-                        boolean[][] arr2 = o.getAvailableMoves(cg.getBoard());
+            for(int s=0;s<whitePieces.size();s++)
+            {
+                Piece p = whitePieces.get(s);
 
-                        if (arr2[m.getP().getRow()][m.getP().getCol()] == true && isValidMove(o.getRow(), o.getCol(), m.getP().getRow(), m.getP().getCol(), o) == true) {
-                            m.setWeight(m.getWeight() - m.getP().getWeight());
-                            status4 = 1;
-                        }
-                    }
-                    if (status4 == 0) {
-                        for (int xx = 0; xx < arr.length; xx++) {
-                            for (int yy = 0; yy < arr[0].length; yy++) {
-                                if (arr[xx][yy] == true && isValidMove(r, c, xx, yy, m.getP()) && cg.getBoard()[xx][yy] != null) {
-                                    int newWeight = m.getWeight() + cg.getBoard()[xx][yy].getWeight();
-                                    //newWeight is current weight plus whatever is at the new location
-                                    int or = r;
-                                    int oc = c;
-                                    boolean hm2 = m.getP().hasMoved();
-                                    Piece ap = cg.movePiece(r, c, xx, yy, m.getP());
-                                    cg.updateBoard();
-                                    for (int g = 0; g < whitePieces.size(); g++) {//if piece is defending location, remove itself weight
-                                        //needs to move piece in order to see if its valid or not
-                                        Piece ppp = whitePieces.get(g);
+                boolean[][] arr = p.getAvailableMoves(cg.getBoard());
 
-                                        boolean[][] arr2 = ppp.getAvailableMoves(cg.getBoard());
+                for(int x=0;x<arr.length;x++)
+                {
+                    for(int y=0;y<arr[0].length;y++)
+                    {
+                        if(arr[x][y]==true && isValidMove(p.getRow(),p.getCol(),x,y,p)==true && cg.getBoard()[x][y]!=null && cg.getBoard()[x][y].getColor()==cg.BLACK && attacked==null)
+                        {
+                            attacked = cg.getBoard()[x][y];
+                            cg.getPieces().remove(attacked);
+                            Piece o = new Pawn(x,y,cg.WHITE,true,1,true);
+                            cg.getPieces().add(o);
+                            cg.updateBoard();
+                            boolean protectAlready = false;
 
+                            for(int xx=0;xx<blackPieces.size();xx++)
+                            {
+                                Piece f = blackPieces.get(xx);
 
-//                                    for (int xxx = 0; xxx < arr2.length; xxx++)
-//                                    {
-//                                        for (int yyy = 0; yyy < arr2[0].length; yyy++)
-//                                        {
-                                        if (arr2[xx][yy] == true && isValidMove(ppp.getRow(), ppp.getCol(), xx, yy, ppp)) {
-                                            System.out.println("PPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPp");
-
-                                            newWeight = newWeight - m.getP().getWeight();
-                                            status2 = 1;
-                                        }
-                                        if (status2 == 1)
-                                            break;
-//                                        }
-//                                        if(status2==1)
-//                                            break;
-//                                    }
-//                                    if(status2==1)
-//                                        break;
-
-                                    }
-                                    cg.revertMovePiece(or, oc, m.getP(), ap, hm2);
-
-                                    // if(newWeight>m.getWeight())
-                                    m.setWeight(newWeight);
+                                if(isValidMove(f.getRow(),f.getCol(),x,y,f))
+                                {
+                                    protectAlready = true;
 
 
                                 }
-                                if (status2 == 1)
-                                    break;
+                            }
 
-//                            if (arr[xx][yy] == true && isValidMove(r, c, xx, yy, m.getP()) && cg.getBoard()[xx][yy] == null)
-//                            {
-//                                int newWeight = m.getWeight();
-//                                //newWeight is current weight plus whatever is at the new location
-//
-//                                int status2 = 0;
-//                                for (int g = 0; g < whitePieces.size(); g++)
-//                                {//if piece is defending location, remove itself weight
-//                                    Piece ppp = whitePieces.get(g);
-//                                    boolean[][] arr2 = ppp.getAvailableMoves(cg.getBoard());
-//
-//
+                            cg.updateBoard();
+
+                            if(protectAlready==false)
+                            {
+                                for (int ss = 0; ss < moves.size(); ss++) {
+                                    MoveWeight m = moves.get(ss);
+                                    int oldr = m.getP().getRow();
+                                    int oldc = m.getP().getCol();
+                                    int r = m.getR();
+                                    int c = m.getC();
+                                    boolean hm = m.getP().hasMoved();
+                                    Piece pp = cg.movePiece(oldr, oldc, r, c, m.getP());
+                                    cg.updateBoard();
+
+                                    if (isValidMove(r, c, attacked.getRow(), attacked.getCol(), m.getP()) && defender == null) {
+                                        defender = m.getP();
+                                        m.setWeight(m.getWeight() + attacked.getWeight() - p.getWeight());
+                                        proceed = false;
+                                        System.out.println("GGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGG");
+                                    } else if (isValidMove(r, c, attacked.getRow(), attacked.getCol(), m.getP()) && defender != null && defender.getWeight() > m.getP().getWeight()) {
+                                        defender = m.getP();
+                                        m.setWeight(m.getWeight() + attacked.getWeight() - p.getWeight());
+                                        proceed = false;
+                                        System.out.println("GGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGG");
+
+                                    }
+
+                                    cg.revertMovePiece(oldr, oldc, m.getP(), pp, hm);
+                                    cg.updateBoard();
+                                }
+                            }
+                            cg.getPieces().remove(o);
+                            if(attacked!=null)
+                                cg.getPieces().add(attacked);
+                            cg.updateBoard();
+
+
+                        }
+                        else if(arr[x][y]==true && isValidMove(p.getRow(),p.getCol(),x,y,p)==true && cg.getBoard()[x][y]!=null && cg.getBoard()[x][y].getColor()==cg.BLACK && attacked!=null && cg.getBoard()[x][y].getWeight()>attacked.getWeight())
+                        {
+                            attacked = cg.getBoard()[x][y];
+                            cg.getPieces().remove(attacked);
+                            Piece o = new Pawn(x,y,cg.WHITE,true,1,true);
+                            cg.getPieces().add(o);
+
+                            cg.updateBoard();
+                            boolean protectAlready = false;
+
+                            for(int xx=0;xx<blackPieces.size();xx++)
+                            {
+                                Piece f = blackPieces.get(xx);
+
+                                if(isValidMove(f.getRow(),f.getCol(),x,y,f))
+                                {
+                                    protectAlready = true;
+                                }
+                            }
+                            cg.updateBoard();
+
+
+                            if(protectAlready==false) {
+                                for (int ss = 0; ss < moves.size(); ss++) {
+                                    MoveWeight m = moves.get(ss);
+                                    int oldr = m.getP().getRow();
+                                    int oldc = m.getP().getCol();
+                                    int r = m.getR();
+                                    int c = m.getC();
+                                    boolean hm = m.getP().hasMoved();
+                                    Piece pp = cg.movePiece(oldr, oldc, r, c, m.getP());
+                                    cg.updateBoard();
+
+
+                                    if (isValidMove(r, c, attacked.getRow(), attacked.getCol(), m.getP()) && defender == null) {
+                                        defender = m.getP();
+                                        m.setWeight(m.getWeight() + attacked.getWeight() - p.getWeight());
+                                        proceed = false;
+                                        System.out.println("GGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGG");
+
+                                    } else if (isValidMove(r, c, attacked.getRow(), attacked.getCol(), m.getP()) && defender != null && defender.getWeight() > m.getP().getWeight()) {
+                                        defender = m.getP();
+                                        m.setWeight(m.getWeight() + attacked.getWeight() - p.getWeight());
+                                        proceed = false;
+                                        System.out.println("GGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGG");
+
+
+                                    }
+
+                                    cg.revertMovePiece(oldr, oldc, m.getP(), pp, hm);
+                                    cg.updateBoard();
+
+                                }
+                            }
+                            if(attacked!=null)
+                                cg.getPieces().add(attacked);
+                            cg.getPieces().remove(o);
+
+                            cg.updateBoard();
+
+                        }
+                    }
+                }
+            }
+
+       //     cg.updateBoard();
+            for (int x = 0; x < moves.size(); x++) {
+                MoveWeight m = moves.get(x);
+                if (m.getWeight() > bestMove.getWeight()) {
+                    bestMove.setP(m.getP());
+                    bestMove.setR(m.getR());
+                    bestMove.setC(m.getC());
+                    bestMove.setWeight(m.getWeight());
+                }
+            }
+
+            if(proceed==true && bestMove.getWeight()<=0) {
+
+                for (int x = 0; x < moves.size(); x++)
+                {//piece moves to new location //use piece as null for changed
+                    MoveWeight m = moves.get(x);
+                    int oldr = m.getP().getRow();
+                    int oldc = m.getP().getCol();
+                    int r = m.getR();
+                    int c = m.getC();
+                    boolean hm = m.getP().hasMoved();
+                    Piece pp = cg.movePiece(oldr, oldc, r, c, m.getP());
+                    cg.updateBoard();
+                    if (m.changed == false)
+                    {//if new location didnt originally have a piece there make another move
+                        boolean[][] arr = m.getP().getAvailableMoves(cg.getBoard());
+                        int status2 = 0;
+                        int status4 = 0;
+                        for (int s = 0; s < whitePieces.size(); s++) {
+                            Piece o = whitePieces.get(s);
+
+                            boolean[][] arr2 = o.getAvailableMoves(cg.getBoard());
+
+                            if (arr2[m.getP().getRow()][m.getP().getCol()] == true && isValidMove(o.getRow(), o.getCol(), m.getP().getRow(), m.getP().getCol(), o) == true) {
+                                m.setWeight(m.getWeight() - m.getP().getWeight());
+                                status4 = 1;
+                            }
+                        }
+                        if (status4 == 0) {
+                            for (int xx = 0; xx < arr.length; xx++) {
+                                for (int yy = 0; yy < arr[0].length; yy++) {
+                                    if (arr[xx][yy] == true && isValidMove(r, c, xx, yy, m.getP()) && cg.getBoard()[xx][yy] != null) {
+                                        int newWeight = m.getWeight() + cg.getBoard()[xx][yy].getWeight();
+                                        //newWeight is current weight plus whatever is at the new location
+                                        int or = r;
+                                        int oc = c;
+                                        boolean hm2 = m.getP().hasMoved();
+                                        Piece ap = cg.movePiece(r, c, xx, yy, m.getP());
+                                        cg.updateBoard();
+                                        for (int g = 0; g < whitePieces.size(); g++) {//if piece is defending location, remove itself weight
+                                            //needs to move piece in order to see if its valid or not
+                                            Piece ppp = whitePieces.get(g);
+
+                                            boolean[][] arr2 = ppp.getAvailableMoves(cg.getBoard());
+
+
 //                                    for (int xxx = 0; xxx < arr2.length; xxx++)
 //                                    {
 //                                        for (int yyy = 0; yyy < arr2[0].length; yyy++)
 //                                        {
-//                                            if (arr[xxx][yyy] == true && isValidMove(ppp.getRow(), ppp.getCol(), xxx, yyy, ppp) && xxx == xx && yyy == yy)
-//                                            {
-//                                                newWeight = m.getWeight() - m.getP().getWeight();
-//                                                status2=1;
-//                                            }
-//                                            if(status2==1)
-//                                                break;
+                                            if (arr2[xx][yy] == true && isValidMove(ppp.getRow(), ppp.getCol(), xx, yy, ppp)) {
+
+                                                newWeight = newWeight - m.getP().getWeight();
+                                                status2 = 1;
+                                            }
+                                            if (status2 == 1)
+                                                break;
 //                                        }
 //                                        if(status2==1)
 //                                            break;
 //                                    }
 //                                    if(status2==1)
 //                                        break;
-//
-//                                }
-//
-//                                // if(newWeight>m.getWeight())
-//                                m.setWeight(newWeight);
-//
-//
+
+                                        }
+                                        cg.revertMovePiece(or, oc, m.getP(), ap, hm2);
+
+                                        // if(newWeight>m.getWeight())
+                                        m.setWeight(newWeight);
+
+
+                                    }
+                                    if (status2 == 1)
+                                        break;
+
 //                            }
+                                }
+                                if (status2 == 1)
+                                    break;
                             }
-                            if (status2 == 1)
-                                break;
                         }
                     }
+                    cg.revertMovePiece(oldr, oldc, m.getP(), pp, hm);
+                    status = 0;
                 }
 
-                status = 0;
-
-                cg.revertMovePiece(oldr, oldc, m.getP(), pp, hm);
-
             }
+
+
+
+
+
+
             System.out.println(bestMove.getP().getRow()+"                                          "+bestMove.getP().getCol()+"                     "+bestMove.getWeight());
 
             for (int x = 0; x < moves.size(); x++) {
@@ -1095,27 +1233,36 @@ public class ChessPanel extends JPanel implements MouseListener, KeyListener
 
 
             if (bestMove.getWeight() == -10000) {
-                System.out.println("PPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPP");
                 randomAIMove();
             }
-              else if(bestMove.getWeight()==0)
-        {
-            ArrayList<MoveWeight> mw = new ArrayList<>();
-            System.out.println("LLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLL");
-            for(int x=0;x<moves.size();x++)
+//            if(bestMove.getWeight()==0)
+//            {
+//
+//            }
+            if(bestMove.getWeight()==0)
             {
+                //if piece is being attacked and moving a piece can block it while still being safe
+                //prioritize taking a piece over check if it is safe to take a piece
+                //piece should check if already being protected, if not then try to save its own life
+                //if protecting something thats being attacked and is the only one then move subtract the protected things weight
+                //check if protecting black piece even if not being attacked, do best move check again, if still 0 then random
+                //do look ahead only if no black pieces are in danger and unprotected
+                //check if any white piece is attacking a black piece, find which black piece is worth the most that is being attacked and can be protected, if it can be protected, then protect it
+                //check all white pieces if they are attacking anything, if they are, remove what they are attacking and check if any black piece is attacking that, if not, then try to attack(defend) that spot
+                ArrayList<MoveWeight> mw = new ArrayList<>();
+                System.out.println("LLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLL");
+                for(int x=0;x<moves.size();x++)
+                {
+                    if(moves.get(x).getWeight()==0)
+                        mw.add(moves.get(x));
+                }
+                int random = (int)(Math.random()*mw.size());
 
-
-                if(moves.get(x).getWeight()==0)
-                    mw.add(moves.get(x));
+                cg.movePiece(mw.get(random).getP().getRow(),mw.get(random).getP().getCol(),mw.get(random).getR(), mw.get(random).getC(),mw.get(random).getP());
+                cg.setTurn(cg.WHITE);
+                selected = null;
+                updateStatus();
             }
-            int random = (int)(Math.random()*mw.size());
-
-            cg.movePiece(mw.get(random).getP().getRow(),mw.get(random).getP().getCol(),mw.get(random).getR(), mw.get(random).getC(),mw.get(random).getP());
-            cg.setTurn(cg.WHITE);
-            selected = null;
-            updateStatus();
-        }
             else {
                 for (int x = 0; x < cg.getPieces().size(); x++) {
                     if (cg.getPieces().get(x).equals(bestMove.getP())) {
@@ -1141,6 +1288,8 @@ public class ChessPanel extends JPanel implements MouseListener, KeyListener
                 repaint();
             }
         }
+        updateStatus();
+        repaint();
     }
 
  

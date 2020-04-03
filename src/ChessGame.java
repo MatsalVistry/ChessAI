@@ -15,8 +15,6 @@ public class ChessGame
     public static final int TWO_PLAYER =8;
     public static final int STALEMATE =9;
 
-
-
     private Piece[][] board;
     private int turn;
     private int playerAmount;
@@ -27,9 +25,6 @@ public class ChessGame
 	private LinkedList<ArrayList<Piece>> ll = new LinkedList<>();
     private LinkedList<ArrayList<Integer>> llW = new LinkedList<>();
     private LinkedList<ArrayList<Integer>> llB = new LinkedList<>();
-
-
-
     private int status;
  
     public ChessGame()
@@ -42,7 +37,6 @@ public class ChessGame
 		killedBlackPieces = new ArrayList<>();
         reset();
         printBoard();
-        
     }
     
     public void reset()
@@ -83,16 +77,12 @@ public class ChessGame
 		pieces.add(new King(7,3,BLACK, true,6,false));
 
 		updateBoard();
-		// doesn't set the empty spaces to null or a different value
-//		for(int x=0;x<pieces.size();x++)
-//		{
-//			board[pieces.get(x).getRow()][pieces.get(x).getCol()] = pieces.get(x);
-//		}
     }
     
     public void printBoard()
 	{
 		int s = 0;
+
 		for(int x = 0;x<8;x++)
 		{
 			for(int y = 0;y<8;y++)
@@ -107,12 +97,9 @@ public class ChessGame
 	}
     public Piece movePiece(int oldr, int oldc, int r, int c, Piece p)
    	{
-//   	    ll.addLast((ArrayList<Piece>)pieces.clone());
-//        llW.addLast((ArrayList<Integer>)killedWhitePieces.clone());
-//        llB.addLast((ArrayList<Integer>)killedBlackPieces.clone());
-
    		Piece piece = null;
    		updateBoard();
+
     	for(int x=0;x<pieces.size();x++)
     	{
     		if(pieces.get(x).getRow()==r && pieces.get(x).getCol()==c && pieces.get(x).getColor()!=p.getColor())
@@ -124,86 +111,17 @@ public class ChessGame
     				killedBlackPieces.add(piece.getType());
     		}
     	}
-//    	if(p.getType()==6 && p.getRow()==0&& c-oldc==2 && p.getColor()==WHITE)
-//		{
-//			for(int x=0;x<pieces.size();x++)
-//			{
-//				if(pieces.get(x).equals(board[0][7]) && pieces.get(x).hasMoved()==false)
-//				{
-//      //              piece = new Rook(pieces.get(x).getRow(),pieces.get(x).getCol(),pieces.get(x).getColor(),true, 2,false);
-//					pieces.get(x).setCol(5);
-//					pieces.get(x).setHasMoved(true);
-////                    p.setRow(r);
-////                    p.setCol(c);
-////                    p.setHasMoved(true);
-//				}
-//			}
-//			System.out.println("YYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYY");
-//		}
-//		else if(p.getType()==6 &&  p.getRow()==0&& c-oldc==-2 && p.getColor()==WHITE)
-//		{
-//			for(int x=0;x<pieces.size();x++)
-//			{
-//				if(pieces.get(x).equals(board[0][0]) && pieces.get(x).hasMoved()==false)
-//				{
-//       //             piece = new Rook(pieces.get(x).getRow(),pieces.get(x).getCol(),pieces.get(x).getColor(),true, 2,false);
-//					pieces.get(x).setCol(3);
-//					pieces.get(x).setHasMoved(true);
-////                    p.setRow(r);
-////                    p.setCol(c);
-////                    p.setHasMoved(true);
-//				}
-//			}
-//			System.out.println("YYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYY");
-//		}
-//		else if(p.getType()==6 && p.getRow()==7&& c-oldc==2 && p.getColor()==BLACK)
-//		{
-//			for(int x=0;x<pieces.size();x++)
-//			{
-//				if(pieces.get(x).equals(board[7][7]) && pieces.get(x).hasMoved()==false)
-//				{
-//      //              piece = new Rook(pieces.get(x).getRow(),pieces.get(x).getCol(),pieces.get(x).getColor(),true, 2,false);
-//					pieces.get(x).setCol(4);
-//					pieces.get(x).setHasMoved(true);
-////                    p.setRow(r);
-////                    p.setCol(c);
-////                    p.setHasMoved(true);
-//				}
-//			}
-//			System.out.println("YYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYY");
-//		}
-//		else if(p.getType()==6 &&  p.getRow()==7&& c-oldc==-2 && p.getColor()==BLACK)
-//		{
-//			for(int x=0;x<pieces.size();x++)
-//			{
-//				if(pieces.get(x).equals(board[7][0]) && pieces.get(x).hasMoved()==false)
-//				{
-//      //              piece = new Rook(pieces.get(x).getRow(),pieces.get(x).getCol(),pieces.get(x).getColor(),true, 2,false);
-//					pieces.get(x).setCol(2);
-//					pieces.get(x).setHasMoved(true);
-////                    p.setRow(r);
-////                    p.setCol(c);
-////                    p.setHasMoved(true);
-//				}
-//			}
-//			System.out.println("YYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYY");
-//		}
-	//	else {
 
-
-            p.setRow(r);
-            p.setCol(c);
-            p.setHasMoved(true);
-     //   }
+    	p.setRow(r);
+    	p.setCol(c);
+    	p.setHasMoved(true);
 		updateBoard();
 
     	return piece;
    	}
 	public void revertMovePiece(int oldr, int oldc, Piece p, Piece pp, boolean hasMoved)
 	{
-//	    pieces = ll.removeLast();
-//	    killedWhitePieces=llW.removeLast();
-//	    killedBlackPieces=llB.removeLast();
+
 		if(pp!=null)
 		{
 			pieces.add(pp);
@@ -216,10 +134,11 @@ public class ChessGame
 		p.setRow(oldr);
 		p.setCol(oldc);
 		p.setHasMoved(hasMoved);
+
 		if(status==TRANSFORMATION_BLACK || status==TRANSFORMATION_WHITE)
 			status=PLAYING;
-		updateBoard();
 
+		updateBoard();
 	}
     public void setNull(int r, int c)
     {
@@ -232,6 +151,7 @@ public class ChessGame
     public void updateBoard()
     {
     	int s = 0;
+
 		for(int x = 0;x<8;x++)
 		{
 			for(int y = 0;y<8;y++)
@@ -275,27 +195,33 @@ public class ChessGame
     	turn = x;
     }
 
-    public void setPieces(ArrayList<Piece> pieces) {
+    public void setPieces(ArrayList<Piece> pieces)
+	{
         this.pieces = pieces;
     }
 
-    public ArrayList<String> getMessages() {
+    public ArrayList<String> getMessages()
+	{
 		return messages;
 	}
 
-	public ArrayList<Integer> getKilledWhitePieces() {
+	public ArrayList<Integer> getKilledWhitePieces()
+	{
 		return killedWhitePieces;
 	}
 
-	public ArrayList<Integer> getKilledBlackPieces() {
+	public ArrayList<Integer> getKilledBlackPieces()
+	{
 		return killedBlackPieces;
 	}
 
-    public int getPlayerAmount() {
+    public int getPlayerAmount()
+	{
         return playerAmount;
     }
 
-    public void setPlayerAmount(int playerAmount) {
+    public void setPlayerAmount(int playerAmount)
+	{
         this.playerAmount = playerAmount;
     }
 }
